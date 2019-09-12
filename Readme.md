@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Alexander Romashko](https://up.htmlacademy.ru/javascript/18/user/897219).
-* Наставник: `Неизвестно`.
+* Наставник: [Юрий Нехаевский](https://htmlacademy.ru/profile/nekhaevskiy)
 
 ---
 
