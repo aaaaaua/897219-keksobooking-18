@@ -4,6 +4,7 @@ var pinOfferYMin = 130;
 var pinOfferYMax = 630;
 var pinOfferOffsetX = 25;
 var pinOfferOffsetY = 70;
+var mapsWidth = document.querySelector('.map').offsetWidth;
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
@@ -11,7 +12,6 @@ map.classList.remove('map--faded');
 var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinOfferList = document.querySelector('.map__pins');
 
-var MAPS_WIDTH = document.querySelector('.map').offsetWidth;
 var OFFER_TITLE = ['Нельзя пройти мимо', 'Супердом', 'Фантастично', 'Ищешь квартиру', 'Дружелюбный домик', 'Большой Дом', 'Все Новое'];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var OFFER_CHECKIN = ['12:00', '13:00', '14:00'];
@@ -38,7 +38,8 @@ var getRandomArrValue = function (array) {
 
 // Возвращает случаное колличество элементов из массива
 var getRandomArrNValues = function (array, n) {
-  var shuffled = array.sort(function () {
+  var arrayCopy = array.slice();
+  var shuffled = arrayCopy.sort(function () {
     return Math.random() - 0.5;
   });
   var selected = shuffled.slice(0, n);
@@ -72,7 +73,7 @@ var makePinOffer = function (i) {
     },
 
     location: {
-      x: getRandomValue(MAPS_WIDTH - MAPS_WIDTH - pinOfferOffsetX, MAPS_WIDTH - pinOfferOffsetX),
+      x: getRandomValue(mapsWidth - mapsWidth - pinOfferOffsetX, mapsWidth - pinOfferOffsetX),
       y: getRandomValue(pinOfferYMin - pinOfferOffsetY, pinOfferYMax - pinOfferOffsetY)
     }
   };
