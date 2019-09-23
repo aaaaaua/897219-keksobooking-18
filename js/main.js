@@ -52,7 +52,22 @@ var renderAvatarLink = function (i) {
   return userAvatarLink;
 };
 
+var renderCoords = function () {
+  return {
+    x: getRandomValue(mapsWidth - mapsWidth - pinOfferOffsetX, mapsWidth - pinOfferOffsetX),
+    y: getRandomValue(pinOfferYMin - pinOfferOffsetY, pinOfferYMax - pinOfferOffsetY)
+  };
+};
+
+var getOfferGuestsValue = function (rooms) {
+  return rooms >= 2 ? getRandomIntegerValue(4, 7) : getRandomIntegerValue(1, 3);
+};
+
+
 var makePinOffer = function (i) {
+  var pinCoordsХ = renderCoords().x;
+  var pinCoordsY = renderCoords().y;
+
   var pinOffer = {
     author: {
       avatar: renderAvatarLink(i)
@@ -60,7 +75,7 @@ var makePinOffer = function (i) {
 
     offer: {
       title: getRandomArrValue(OFFER_TITLE),
-      address: '',
+      address: pinCoordsХ.toString() + ', ' + pinCoordsY.toString(),
       price: getRandomIntegerValue(100, 5000),
       type: getRandomArrValue(OFFER_TYPE),
       rooms: getRandomIntegerValue(1, 3),
@@ -73,22 +88,10 @@ var makePinOffer = function (i) {
     },
 
     location: {
-      x: getRandomValue(mapsWidth - mapsWidth - pinOfferOffsetX, mapsWidth - pinOfferOffsetX),
-      y: getRandomValue(pinOfferYMin - pinOfferOffsetY, pinOfferYMax - pinOfferOffsetY)
+      x: pinCoordsХ,
+      y: pinCoordsY
     }
   };
-
-  var getOfferGuestsValue = function (rooms) {
-    var guestsValue = rooms >= 2 ? getRandomIntegerValue(4, 7) : getRandomIntegerValue(1, 3);
-    pinOffer.offer.guests = guestsValue;
-  };
-  getOfferGuestsValue(pinOffer.offer.rooms);
-
-  var getOfferAddressValue = function () {
-    var addressValue = pinOffer.location.x.toString() + ' ' + pinOffer.location.y.toString();
-    pinOffer.offer.address = addressValue;
-  };
-  getOfferAddressValue();
 
   return pinOffer;
 };
