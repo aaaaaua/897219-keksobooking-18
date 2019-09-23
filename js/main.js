@@ -114,6 +114,7 @@ var renderOffer = function (pinOffer) {
   offerPinElement.style.left = pinOffer.location.x + 'px';
   offerPinElement.style.top = pinOffer.location.y + 'px';
   offerPinElement.querySelector('img').src = pinOffer.author.avatar;
+  offerPinElement.setAttribute('alt', pinOffer.offer.title);
 
   return offerPinElement;
 };
