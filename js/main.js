@@ -2,7 +2,7 @@
 
 var PIN_OFFER_Y_MIN = 130;
 var PIN_OFFER_Y_MAX = 630;
-var PIN_OFFER_OFFSET_X = 50;
+var PIN_OFFER_OFFSET_X = 25;
 var PIN_OFFER_OFFSET_Y = 70;
 var mapsWidth = document.querySelector('.map').offsetWidth;
 
@@ -20,12 +20,13 @@ var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http:
 
 // возвращает случайное целое число из заданного диапазона
 var getRandomIntegerValue = function (min, max) {
-  var rand = min - 0.5 + Math.random() * (max - min + 1); rand = Math.round(rand); return rand;
+  var rand = min - 0.5 + Math.random() * (max - min + 1);
+  return Math.round(rand);
 };
 
 // возвращает случайное число из заданного диапазона
 var getRandomValue = function (min, max) {
-  var rand = min + Math.random() * (max - min); return rand;
+  return min + Math.random() * (max - min);
 };
 
 // Возвращает случайное значение из массива
@@ -39,21 +40,19 @@ var getRandomArrNValues = function (array, n) {
   var shuffled = arrayCopy.sort(function () {
     return Math.random() - 0.5;
   });
-  var selected = shuffled.slice(0, n);
-  return selected;
+  return shuffled.slice(0, n);
 };
 
 var renderAvatarLink = function (i) {
-  var userAvatarLink = i < 10 ? 'img/avatars/user' + 0 + i + '.png' : 'img/avatars/user' + i + '.png'; return userAvatarLink;
+  return i < 10 ? 'img/avatars/user' + 0 + i + '.png' : 'img/avatars/user' + i + '.png';
 };
 
 var renderCoords = function () {
   return {
-    x: getRandomValue(0, mapsWidth - PIN_OFFER_OFFSET_X),
-    y: getRandomValue(PIN_OFFER_Y_MIN - PIN_OFFER_OFFSET_Y, PIN_OFFER_Y_MAX - PIN_OFFER_OFFSET_Y)
+    x: getRandomValue(0 + PIN_OFFER_OFFSET_X, mapsWidth - PIN_OFFER_OFFSET_X),
+    y: getRandomValue(PIN_OFFER_Y_MIN, PIN_OFFER_Y_MAX)
   };
 };
-
 
 var makePinOffer = function (i) {
   var pinCoordsХ = renderCoords().x;
@@ -106,8 +105,8 @@ var pinOffersArrow = makePinOfferArr();
 var renderOffer = function (pinOffer) {
   var offerPinElement = pinOfferTemplate.cloneNode(true);
 
-  offerPinElement.style.left = pinOffer.location.x + 'px';
-  offerPinElement.style.top = pinOffer.location.y + 'px';
+  offerPinElement.style.left = pinOffer.location.x - PIN_OFFER_OFFSET_X + 'px';
+  offerPinElement.style.top = pinOffer.location.y - PIN_OFFER_OFFSET_Y + 'px';
   offerPinElement.querySelector('img').src = pinOffer.author.avatar;
   offerPinElement.setAttribute('alt', pinOffer.offer.title);
 
