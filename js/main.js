@@ -77,9 +77,9 @@ var makePinOffer = function (i) {
       guests: getOfferGuestsValue(offerRooms),
       checkin: getRandomArrValue(OFFER_CHECKINS),
       checkout: getRandomArrValue(OFFER_CHECKINS),
-      features: getRandomArrNValues(OFFER_FEATURES, getRandomIntegerValue(1, 6)).toString(),
+      features: getRandomArrNValues(OFFER_FEATURES, getRandomIntegerValue(1, 6)),
       description: getRandomArrValue(OFFER_TITLES),
-      photos: getRandomArrNValues(OFFER_PHOTOS, getRandomIntegerValue(1, 3)).toString()
+      photos: getRandomArrNValues(OFFER_PHOTOS, getRandomIntegerValue(1, 3))
     },
 
     location: {
@@ -108,7 +108,7 @@ var renderOffer = function (pinOffer) {
   offerPinElement.style.left = pinOffer.location.x - PIN_OFFER_OFFSET_X + 'px';
   offerPinElement.style.top = pinOffer.location.y - PIN_OFFER_OFFSET_Y + 'px';
   offerPinElement.querySelector('img').src = pinOffer.author.avatar;
-  offerPinElement.setAttribute('alt', pinOffer.offer.title);
+  offerPinElement.querySelector('img').alt = pinOffer.offer.title;
 
   return offerPinElement;
 };
