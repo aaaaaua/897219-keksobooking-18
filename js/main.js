@@ -4,13 +4,16 @@ var PIN_OFFER_Y_MIN = 130;
 var PIN_OFFER_Y_MAX = 630;
 var PIN_OFFER_OFFSET_X = 25;
 var PIN_OFFER_OFFSET_Y = 70;
+var ENTER_KEYCODE = 13;
 var mapsWidth = document.querySelector('.map').offsetWidth;
 
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var mapFiltersForm = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
-// map.classList.remove('map--faded');
+var mapsPinMainOffset = 31;
+var mapsPinMainOffsetYAdditionalIfActive = 20;
+var adFormAdress = document.getElementById('address');
 
 var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinOfferList = document.querySelector('.map__pins');
@@ -46,7 +49,26 @@ var getRandomArrNValues = function (array, n) {
   return shuffled.slice(0, n);
 };
 
+// Получение координат элемента
+var getCoords = function (elem) {
+  var box = elem.getBoundingClientRect();
+  return {
+    y: box.y + pageYOffset,
+    x: box.x + pageXOffset
+  };
+};
 
+// Координаты главной метки в неактивном состоянии
+var makeMainPinAdressValue = function () {
+  adFormAdress.value = (getCoords(mapPinMain).x + mapsPinMainOffset) + ', ' + (getCoords(mapPinMain).y + mapsPinMainOffset);
+};
+
+// Координаты главной метки в активном состоянии
+var makeAddressInputValueActive = function () {
+  adFormAdress.value = (getCoords(mapPinMain).x + mapsPinMainOffset) + ', ' + (getCoords(mapPinMain).y + mapsPinMainOffset + mapsPinMainOffsetYAdditionalIfActive);
+};
+
+// Перевод страницы в актовное состояние
 var makeFormElementsDisabled = function (form) {
   var formFieldsets = form.querySelectorAll('fieldset');
   for (var i = 0; i < formFieldsets.length; i++) {
@@ -66,6 +88,7 @@ var makePageDisabled = function () {
   adForm.classList.add('ad-form--disabled');
   mapFiltersForm.classList.add('map__filters--disabled');
   makeFormElementsDisabled(adForm);
+  makeMainPinAdressValue();
 };
 
 makePageDisabled();
@@ -75,12 +98,18 @@ var makePageActive = function () {
   adForm.classList.remove('ad-form--disabled');
   mapFiltersForm.classList.remove('map__filters--disabled');
   makeFormElementsActive(adForm);
+  makeAddressInputValueActive();
   createPinOffers();
 };
 
-
 mapPinMain.addEventListener('mousedown', function () {
   makePageActive();
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    makePageActive();
+  }
 });
 
 
