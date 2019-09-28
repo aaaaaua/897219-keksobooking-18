@@ -7,7 +7,10 @@ var PIN_OFFER_OFFSET_Y = 70;
 var mapsWidth = document.querySelector('.map').offsetWidth;
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+var adForm = document.querySelector('.ad-form');
+var mapFiltersForm = document.querySelector('.map__filters');
+var mapPinMain = document.querySelector('.map__pin--main');
+// map.classList.remove('map--faded');
 
 var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinOfferList = document.querySelector('.map__pins');
@@ -43,6 +46,45 @@ var getRandomArrNValues = function (array, n) {
   return shuffled.slice(0, n);
 };
 
+
+var makeFormElementsDisabled = function (form) {
+  var formFieldsets = form.querySelectorAll('fieldset');
+  for (var i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var makeFormElementsActive = function (form) {
+  var formFieldsets = form.querySelectorAll('fieldset');
+  for (var i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].removeAttribute('disabled', 'disabled');
+  }
+};
+
+var makePageDisabled = function () {
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  mapFiltersForm.classList.add('map__filters--disabled');
+  makeFormElementsDisabled(adForm);
+};
+
+makePageDisabled();
+
+var makePageActive = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  mapFiltersForm.classList.remove('map__filters--disabled');
+  makeFormElementsActive(adForm);
+  createPinOffers();
+};
+
+
+mapPinMain.addEventListener('mousedown', function () {
+  makePageActive();
+});
+
+
+// Генерация объектов объявления
 var renderAvatarLink = function (i) {
   return i < 10 ? 'img/avatars/user' + 0 + i + '.png' : 'img/avatars/user' + i + '.png';
 };
@@ -121,4 +163,3 @@ var createPinOffers = function () {
   pinOfferList.appendChild(fragment);
 };
 
-createPinOffers();
