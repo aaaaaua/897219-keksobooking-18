@@ -65,12 +65,14 @@ var getCoords = function (elem) {
 
 // Координаты главной метки в неактивном состоянии
 var makeMainPinAdressValue = function () {
-  adFormAdress.value = (getCoords(mapPinMain).x + mapsPinMainOffset) + ', ' + (getCoords(mapPinMain).y + mapsPinMainOffset);
+  var mainPinCoords = getCoords(mapPinMain);
+  adFormAdress.value = (mainPinCoords.x + mapsPinMainOffset) + ', ' + (mainPinCoords.y + mapsPinMainOffset);
 };
 
 // Координаты главной метки в активном состоянии
 var makeAddressInputValueActive = function () {
-  adFormAdress.value = (getCoords(mapPinMain).x + mapsPinMainOffset) + ', ' + (getCoords(mapPinMain).y + mapsPinMainOffsetYIfActive);
+  var mainPinCoords = getCoords(mapPinMain);
+  adFormAdress.value = (mainPinCoords.x + mapsPinMainOffset) + ', ' + (mainPinCoords.y + mapsPinMainOffsetYIfActive);
 };
 
 
