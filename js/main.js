@@ -12,8 +12,10 @@ var adForm = document.querySelector('.ad-form');
 var mapFiltersForm = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
 var mapsPinMainOffset = 31;
-var mapsPinMainOffsetYAdditionalIfActive = 20;
+var mapsPinMainOffsetYIfActive = 84;
 var adFormAdress = document.getElementById('address');
+var adFormGuest = document.getElementById('capacity');
+var adFormRooms = document.getElementById('room_number');
 
 var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinOfferList = document.querySelector('.map__pins');
@@ -49,6 +51,7 @@ var getRandomArrNValues = function (array, n) {
   return shuffled.slice(0, n);
 };
 
+
 // Получение координат элемента
 var getCoords = function (elem) {
   var box = elem.getBoundingClientRect();
@@ -65,8 +68,9 @@ var makeMainPinAdressValue = function () {
 
 // Координаты главной метки в активном состоянии
 var makeAddressInputValueActive = function () {
-  adFormAdress.value = (getCoords(mapPinMain).x + mapsPinMainOffset) + ', ' + (getCoords(mapPinMain).y + mapsPinMainOffset + mapsPinMainOffsetYAdditionalIfActive);
+  adFormAdress.value = (getCoords(mapPinMain).x + mapsPinMainOffset) + ', ' + (getCoords(mapPinMain).y + mapsPinMainOffsetYIfActive);
 };
+
 
 // Перевод страницы в актовное состояние
 var makeFormElementsDisabled = function (form) {
@@ -192,3 +196,22 @@ var createPinOffers = function () {
   pinOfferList.appendChild(fragment);
 };
 
+var setRoomGeustValue = function () {
+  var options = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
+  };
+
+
+  adFormRooms.onchange = function () {
+    if (adFormRooms.value = 1) {
+      adFormGuest.value = options[1];
+    } else if (adFormRooms.value = 2) {
+      adFormGuest.value = options[2];
+    }
+  };
+};
+
+setRoomGeustValue();
