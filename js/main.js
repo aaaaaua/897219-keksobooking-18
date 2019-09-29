@@ -85,7 +85,7 @@ var makeFormElementsDisabled = function (form) {
 var makeFormElementsActive = function (form) {
   var formFieldsets = form.querySelectorAll('fieldset');
   for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].removeAttribute('disabled', 'disabled');
+    formFieldsets[i].removeAttribute('disabled');
   }
 };
 
@@ -200,13 +200,13 @@ var createPinOffers = function () {
 
 
 // Валидация формы
-var setRoomGeustValue = function () {
+var setRoomGuestValue = function () {
   var adFormGuestOptions = adFormGuest.querySelectorAll('option');
 
   var setAdFormGuestAttribute = function (array) {
     for (var i = 0; i < array.length; i++) {
       array[i].setAttribute('disabled', 'disabled');
-      array[i].removeAttribute('selected', 'selected');
+      array[i].removeAttribute('selected');
     }
   };
   setAdFormGuestAttribute(adFormGuestOptions);
@@ -216,24 +216,24 @@ var setRoomGeustValue = function () {
   adFormRooms.onchange = function () {
     if (adFormRooms.value === '1') {
       setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[2].removeAttribute('disabled', 'disabled');
+      adFormGuestOptions[2].removeAttribute('disabled');
       adFormGuestOptions[2].setAttribute('selected', 'selected');
     } else if (adFormRooms.value === '2') {
       setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[1].removeAttribute('disabled', 'disabled');
-      adFormGuestOptions[2].removeAttribute('disabled', 'disabled');
+      adFormGuestOptions[1].removeAttribute('disabled');
+      adFormGuestOptions[2].removeAttribute('disabled');
       adFormGuestOptions[2].setAttribute('selected', 'selected');
     } else if (adFormRooms.value === '3') {
       setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[0].removeAttribute('disabled', 'disabled');
-      adFormGuestOptions[1].removeAttribute('disabled', 'disabled');
-      adFormGuestOptions[2].removeAttribute('disabled', 'disabled');
+      adFormGuestOptions[0].removeAttribute('disabled');
+      adFormGuestOptions[1].removeAttribute('disabled');
+      adFormGuestOptions[2].removeAttribute('disabled');
       adFormGuestOptions[2].setAttribute('selected', 'selected');
     } else if (adFormRooms.value === '100') {
       setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[3].removeAttribute('disabled', 'disabled');
+      adFormGuestOptions[3].removeAttribute('disabled');
       adFormGuestOptions[3].setAttribute('selected', 'selected');
     }
   };
 };
-setRoomGeustValue();
+setRoomGuestValue();
