@@ -7,12 +7,16 @@ var PIN_OFFER_OFFSET_Y = 70;
 var ENTER_KEYCODE = 13;
 var mapsWidth = document.querySelector('.map').offsetWidth;
 
+var MAP_FADED_CLASS = 'map--faded';
+var AD_FORM_DISABLED_CLASS = 'ad-form--disabled';
+var MAP_FILTER_DISABLED_CLASS = 'map__filters--disabled';
+
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var mapFiltersForm = document.querySelector('.map__filters');
 var mapPinMain = document.querySelector('.map__pin--main');
-var mapsPinMainOffset = 31;
-var mapsPinMainOffsetYIfActive = 84;
+var MAPS_PIN_MAIN_OFFSET = 31;
+var MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE = 84;
 
 var adFormAdress = document.querySelector('#address');
 var adFormGuest = document.querySelector('#capacity');
@@ -64,25 +68,26 @@ var getCoords = function (elem) {
 };
 
 // Координаты главной метки в неактивном состоянии
-var makeMainPinAdressValue = function () {
+var getInactiveMainPinAddress = function () {
   var mainPinCoords = getCoords(mapPinMain);
-  adFormAdress.value = (mainPinCoords.x + mapsPinMainOffset) + ', ' + (mainPinCoords.y + mapsPinMainOffset);
+  adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET);
 };
 
 // Координаты главной метки в активном состоянии
-var makeAddressInputValueActive = function () {
+var getActiveMainPinAddress = function () {
   var mainPinCoords = getCoords(mapPinMain);
-  adFormAdress.value = (mainPinCoords.x + mapsPinMainOffset) + ', ' + (mainPinCoords.y + mapsPinMainOffsetYIfActive);
+  adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE);
 };
 
 
 // Перевод страницы в актовное состояние
-var makeFormElementsDisabled = function (form) {
-  var formFieldsets = form.querySelectorAll('fieldset');
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].setAttribute('disabled', 'disabled');
-  }
-};
+// var makeFormElementsDisabled = function (form) {
+//   var formFieldsets = form.querySelectorAll('fieldset');
+//   for (var i = 0; i < formFieldsets.length; i++) {
+//     formFieldsets[i].setAttribute('disabled', 'disabled');
+//   }
+// };
+getInactiveMainPinAddress();
 
 var makeFormElementsActive = function (form) {
   var formFieldsets = form.querySelectorAll('fieldset');
@@ -91,32 +96,24 @@ var makeFormElementsActive = function (form) {
   }
 };
 
-var makePageDisabled = function () {
-  map.classList.add('map--faded');
-  adForm.classList.add('ad-form--disabled');
-  mapFiltersForm.classList.add('map__filters--disabled');
-  makeFormElementsDisabled(adForm);
-  makeMainPinAdressValue();
-};
-
-makePageDisabled();
-
 var makePageActive = function () {
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  mapFiltersForm.classList.remove('map__filters--disabled');
+  map.classList.remove(MAP_FADED_CLASS);
+  adForm.classList.remove(AD_FORM_DISABLED_CLASS);
+  mapFiltersForm.classList.remove(MAP_FILTER_DISABLED_CLASS);
   makeFormElementsActive(adForm);
-  makeAddressInputValueActive();
-  createPinOffers();
 };
 
 mapPinMain.addEventListener('mousedown', function () {
   makePageActive();
+  getActiveMainPinAddress();
+  createPinOffers();
 });
 
 mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     makePageActive();
+    getActiveMainPinAddress();
+    createPinOffers();
   }
 });
 
@@ -205,36 +202,51 @@ var createPinOffers = function () {
 var setRoomGuestValue = function () {
   var adFormGuestOptions = adFormGuest.querySelectorAll('option');
 
-  var setAdFormGuestAttribute = function (array) {
+  var CAPACITY = {
+    forOneGuest: adFormGuestOptions[2],
+    forTwoGuest: adFormGuestOptions[1],
+    forThreeGuest: adFormGuestOptions[0],
+    notForGuest: adFormGuestOptions[3]
+  };
+
+  var ROOM_QUANTITY = {
+    one: '1',
+    two: '2',
+    three: '3',
+    hundred: '100'
+  };
+
+  var resetAdFormGuestAttribute = function (array) {
     for (var i = 0; i < array.length; i++) {
       array[i].setAttribute('disabled', 'disabled');
       array[i].removeAttribute('selected');
     }
   };
-  setAdFormGuestAttribute(adFormGuestOptions);
+  resetAdFormGuestAttribute(adFormGuestOptions);
 
-  adFormGuestOptions[2].setAttribute('selected', 'selected');
+  CAPACITY.forOneGuest.setAttribute('selected', 'selected');
+  CAPACITY.forOneGuest.removeAttribute('disabled');
 
   adFormRooms.onchange = function () {
-    if (adFormRooms.value === '1') {
-      setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[2].removeAttribute('disabled');
-      adFormGuestOptions[2].setAttribute('selected', 'selected');
-    } else if (adFormRooms.value === '2') {
-      setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[1].removeAttribute('disabled');
-      adFormGuestOptions[2].removeAttribute('disabled');
-      adFormGuestOptions[2].setAttribute('selected', 'selected');
-    } else if (adFormRooms.value === '3') {
-      setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[0].removeAttribute('disabled');
-      adFormGuestOptions[1].removeAttribute('disabled');
-      adFormGuestOptions[2].removeAttribute('disabled');
-      adFormGuestOptions[2].setAttribute('selected', 'selected');
-    } else if (adFormRooms.value === '100') {
-      setAdFormGuestAttribute(adFormGuestOptions);
-      adFormGuestOptions[3].removeAttribute('disabled');
-      adFormGuestOptions[3].setAttribute('selected', 'selected');
+    if (adFormRooms.value === ROOM_QUANTITY.one) {
+      resetAdFormGuestAttribute(adFormGuestOptions);
+      CAPACITY.forOneGuest.removeAttribute('disabled');
+      CAPACITY.forOneGuest.setAttribute('selected', 'selected');
+    } else if (adFormRooms.value === ROOM_QUANTITY.two) {
+      resetAdFormGuestAttribute(adFormGuestOptions);
+      CAPACITY.forTwoGuest.removeAttribute('disabled');
+      CAPACITY.forOneGuest.removeAttribute('disabled');
+      CAPACITY.forOneGuest.setAttribute('selected', 'selected');
+    } else if (adFormRooms.value === ROOM_QUANTITY.three) {
+      resetAdFormGuestAttribute(adFormGuestOptions);
+      CAPACITY.forTwoGuest.removeAttribute('disabled');
+      CAPACITY.forThreeGuest.removeAttribute('disabled');
+      CAPACITY.forOneGuest.removeAttribute('disabled');
+      CAPACITY.forOneGuest.setAttribute('selected', 'selected');
+    } else if (adFormRooms.value === ROOM_QUANTITY.hundred) {
+      resetAdFormGuestAttribute(adFormGuestOptions);
+      CAPACITY.notForGuest.removeAttribute('disabled');
+      CAPACITY.notForGuest.setAttribute('selected', 'selected');
     }
   };
 };
