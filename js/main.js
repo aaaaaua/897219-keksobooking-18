@@ -21,8 +21,13 @@ var MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE = 84;
 var adFormAdress = document.querySelector('#address');
 var adFormGuest = document.querySelector('#capacity');
 var adFormRooms = document.querySelector('#room_number');
+var adFormTitle = adForm.querySelector('#title');
+var adFormPrice = adForm.querySelector('#price');
+var adFormType = adForm.querySelector('#type');
+var adFormTimein = adForm.querySelector('#timein');
+var adFormTimeout = adForm.querySelector('#timeout');
 
-
+var cardOfferTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinOfferList = document.querySelector('.map__pins');
 
@@ -78,17 +83,9 @@ var getActiveMainPinAddress = function () {
   var mainPinCoords = getCoords(mapPinMain);
   adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE);
 };
-
-
-// Перевод страницы в актовное состояние
-// var makeFormElementsDisabled = function (form) {
-//   var formFieldsets = form.querySelectorAll('fieldset');
-//   for (var i = 0; i < formFieldsets.length; i++) {
-//     formFieldsets[i].setAttribute('disabled', 'disabled');
-//   }
-// };
 getInactiveMainPinAddress();
 
+// Перевод страницы в актовное состояние
 var makeFormElementsActive = function (form) {
   var formFieldsets = form.querySelectorAll('fieldset');
   for (var i = 0; i < formFieldsets.length; i++) {
@@ -178,7 +175,83 @@ var makePinOfferArr = function () {
 
 var pinOffersArrow = makePinOfferArr();
 
-var renderOffer = function (pinOffer) {
+// КАРТОЧКА ОБЪЯВЛЕНИЙ
+var renderCard = function (pinOffer) {
+  var offerCardElement = cardOfferTemplate.cloneNode(true);
+
+  // Получение адреса фотографий
+  var createOfferPhotoElement = function () {
+    for (var i = 0; i < pinOffer.offer.photos.length - 1; i++) {
+      var makePopupPhoto = offerCardElement.querySelector('.popup__photos').querySelector('.popup__photo').cloneNode(true);
+      offerCardElement.querySelector('.popup__photos').appendChild(makePopupPhoto);
+    }
+  };
+  createOfferPhotoElement();
+
+  var setOfferPhotoElementAddress = function () {
+    var photos = offerCardElement.querySelector('.popup__photos').querySelectorAll('img');
+    for (var i = 0; i < pinOffer.offer.photos.length; i++) {
+      photos[i].src = pinOffer.offer.photos[i];
+    }
+  };
+  setOfferPhotoElementAddress();
+
+  // отображение типа помещения
+  var offerType = {
+    bungalo: {
+      display: 'Бунгало'
+    },
+    flat: {
+      display: 'Квартира'
+    },
+    house: {
+      display: 'Дом'
+    },
+    palace: {
+      display: 'Дворец'
+    }
+  };
+
+  var displayType = function () {
+    var type = pinOffer.offer.type;
+    return offerType[type].display;
+  };
+
+  var setCardFeatures = function () {
+    var features = offerCardElement.querySelectorAll('.popup__feature');
+
+    features.forEach(function (item) {
+      item.classList.add('visually-hidden');
+      for (var i = 0; i < pinOffer.offer.features.length; i++) {
+        if (item.classList.contains('popup__feature--' + pinOffer.offer.features[i])) {
+          item.classList.remove('visually-hidden');
+        }
+      }
+    });
+  };
+
+  offerCardElement.querySelector('img').src = pinOffer.author.avatar;
+  offerCardElement.querySelector('.popup__title').innerText = pinOffer.offer.title;
+  offerCardElement.querySelector('.popup__text--address').innerText = pinOffer.offer.address;
+  offerCardElement.querySelector('.popup__text--price').innerText = pinOffer.offer.price + '₽/ночь';
+  offerCardElement.querySelector('.popup__type').innerText = displayType();
+  offerCardElement.querySelector('.popup__text--capacity').innerText = pinOffer.offer.rooms + ' комнаты для ' + pinOffer.offer.guests + ' гостей';
+  offerCardElement.querySelector('.popup__text--time').innerText = 'Заезд после ' + pinOffer.offer.checkin + ', выезд до ' + pinOffer.offer.checkout;
+  setCardFeatures();
+  offerCardElement.querySelector('.popup__description').innerText = pinOffer.offer.description;
+  setOfferPhotoElementAddress();
+
+  return offerCardElement;
+};
+
+var createOfferCard = function () {
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(renderCard(pinOffersArrow[1]));
+  map.appendChild(fragment);
+};
+createOfferCard();
+
+var renderPin = function (pinOffer) {
   var offerPinElement = pinOfferTemplate.cloneNode(true);
 
   offerPinElement.style.left = pinOffer.location.x - PIN_OFFER_OFFSET_X + 'px';
@@ -192,7 +265,7 @@ var renderOffer = function (pinOffer) {
 var createPinOffers = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pinOffersArrow.length; i++) {
-    fragment.appendChild(renderOffer(pinOffersArrow[i]));
+    fragment.appendChild(renderPin(pinOffersArrow[i]));
   }
   pinOfferList.appendChild(fragment);
 };
@@ -251,3 +324,60 @@ var setRoomGuestValue = function () {
   };
 };
 setRoomGuestValue();
+
+
+var setformAdressAttribute = function () {
+  adFormAdress.setAttribute('readonly', 'readonly');
+};
+
+var setformTitleAttribute = function () {
+  adFormTitle.setAttribute('required', 'required');
+  adFormTitle.setAttribute('minlength', '30');
+  adFormTitle.setAttribute('maxlength', '100');
+};
+
+var setFormPriceAttribute = function () {
+  var priceLimits = {
+    bungalo: {
+      min: 0
+    },
+    flat: {
+      min: 1000
+    },
+    house: {
+      min: 5000
+    },
+    palace: {
+      min: 10000
+    }
+  };
+
+  var getFormMinPrice = function () {
+    var typeValue = adFormType.value;
+    return priceLimits[typeValue].min;
+  };
+
+  adFormType.addEventListener('change', function () {
+    adFormPrice.setAttribute('min', getFormMinPrice());
+    adFormPrice.setAttribute('placeholder', getFormMinPrice());
+  });
+
+  adFormPrice.setAttribute('max', '1000000');
+};
+
+var setNewFormTimeInOutAttribute = function () {
+  adFormTimein.onchange = function () {
+    adFormTimeout.selectedIndex = this.selectedIndex;
+  };
+  adFormTimeout.onchange = function () {
+    adFormTimein.selectedIndex = this.selectedIndex;
+  };
+};
+
+var setAdFormvalidAttribute = function () {
+  setformAdressAttribute();
+  setformTitleAttribute();
+  setFormPriceAttribute();
+  setNewFormTimeInOutAttribute();
+};
+setAdFormvalidAttribute();
