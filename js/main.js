@@ -217,6 +217,7 @@ var renderCard = function (pinOffer) {
     return offerType[type].display;
   };
 
+  // отображение преимуществ
   var setCardFeatures = function () {
     var features = offerCardElement.querySelectorAll('.popup__feature');
 
@@ -246,7 +247,9 @@ var renderCard = function (pinOffer) {
 
 var createOfferCard = function () {
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(renderCard(pinOffersArrow[1]));
+  for (var i = 0; i < pinOffersArrow.length; i++) {
+    fragment.appendChild(renderCard(pinOffersArrow[i]));
+  }
   map.appendChild(fragment);
 };
 createOfferCard();
@@ -374,10 +377,10 @@ var setNewFormTimeInOutAttribute = function () {
   };
 };
 
-var setAdFormvalidAttribute = function () {
+var setAdFormValidAttribute = function () {
   setformAdressAttribute();
   setformTitleAttribute();
   setFormPriceAttribute();
   setNewFormTimeInOutAttribute();
 };
-setAdFormvalidAttribute();
+setAdFormValidAttribute();
