@@ -104,49 +104,35 @@ var makePageActive = function () {
 mapPinMain.addEventListener('mousedown', function () {
   makePageActive();
   getActiveMainPinAddress();
-  createPinOffers();
-  // openCard();
+  renderPin();
+  setPinId();
 });
 
-// var openCard = function () {
-//   var fragment = document.createDocumentFragment();
-//   var pinOffersElements = pinOfferList.querySelectorAll('.map__pin');
-
-//   for (var i = 1; i < pinOffersElements.length; i++) {
-//     pinOffersElements[i].setAttribute('id', i);
-//     pinOffersElements[i].addEventListener('click', function (evt) {
-//       if (map.querySelector('.map__card')) {
-//         map.removeChild(map.querySelector('.map__card'));
-//       }
-//       fragment.appendChild(renderCard(pinOffers[evt.currentTarget.id - 1]));
-//       map.appendChild(fragment);
-//     });
-//   }
-// };
-
 var openCardOffer = function (evt) {
-  var card = evt.target.closest('.map__pin');
-  var mainCard = evt.target.closest('.map__pin--main');
-  var pinOffersElements = pinOfferList.querySelectorAll('.map__pin');
+  var pin = evt.target.closest('.map__pin');
+  var mainPin = evt.target.closest('.map__pin--main');
+  var card = map.querySelector('.map__card');
 
-  if (!card) {
+  if (!pin) {
     return;
   }
-  if (!pinOfferList.contains(card)) {
+  if (!pinOfferList.contains(pin)) {
     return;
   }
-  if (pinOfferList.contains(mainCard)) {
+  if (pin === mainPin) {
     return;
   }
-  if (map.querySelector('.map__card')) {
-    map.removeChild(map.querySelector('.map__card'));
+  if (card) {
+    map.removeChild(card);
   }
+  map.insertBefore(renderCard(pinOffers[pin.id - 1]), mapFilterContainer);
+};
+
+var setPinId = function () {
+  var pinOffersElements = pinOfferList.querySelectorAll('.map__pin');
   for (var i = 1; i < pinOffersElements.length; i++) {
     pinOffersElements[i].setAttribute('id', i);
   }
-  var fragment = document.createDocumentFragment();
-  fragment.appendChild(renderCard(pinOffers[card.id - 1]));
-  map.insertBefore(fragment, mapFilterContainer);
 };
 
 var closeCardOffer = function (evt) {
@@ -154,9 +140,7 @@ var closeCardOffer = function (evt) {
   offerCard.remove();
 };
 
-map.addEventListener('click', function (evt) {
-  openCardOffer(evt);
-});
+map.addEventListener('click', openCardOffer);
 
 map.addEventListener('click', function (evt) {
   if (evt.target.className !== 'popup__close') {
@@ -176,7 +160,7 @@ mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     makePageActive();
     getActiveMainPinAddress();
-    createPinOffers();
+    renderPin();
   }
 });
 
@@ -245,41 +229,27 @@ var pinOffers = makePinOfferArr();
 var renderCard = function (pinOffer) {
   var offerCardElement = cardOfferTemplate.cloneNode(true);
 
-  // Получение адреса фотографий
   var createOfferPhotoElement = function () {
     var popupPhotos = offerCardElement.querySelector('.popup__photos').querySelectorAll('img');
+    var popupPhotosList = offerCardElement.querySelector('.popup__photos');
     popupPhotos.forEach(function (item) {
       item.remove();
     });
 
     for (var i = 0; i < pinOffer.offer.photos.length; i++) {
+      var fragment = document.createDocumentFragment();
       var popupPhoto = document.createElement('img');
       popupPhoto.classList.add('popup__photo');
       popupPhoto.setAttribute('width', '45');
       popupPhoto.setAttribute('height', '40');
-      offerCardElement.querySelector('.popup__photos').appendChild(popupPhoto);
+
+      fragment.appendChild(popupPhoto);
+      popupPhotosList.appendChild(fragment);
 
       var popupPhotoElement = offerCardElement.querySelector('.popup__photos').querySelectorAll('img');
       popupPhotoElement[i].src = pinOffer.offer.photos[i];
     }
   };
-  createOfferPhotoElement();
-
-  // // Получение адреса фотографий
-  // var createOfferPhotoElement = function () {
-  //   for (var i = 0; i < pinOffer.offer.photos.length - 1; i++) {
-  //     var PopupPhoto = offerCardElement.querySelector('.popup__photo').cloneNode(true);
-  //     offerCardElement.querySelector('.popup__photos').appendChild(PopupPhoto);
-  //   }
-  // };
-  // createOfferPhotoElement();
-
-  // var setOfferPhotoElementAddress = function () {
-  //   var photos = offerCardElement.querySelector('.popup__photos').querySelectorAll('img');
-  //   for (var i = 0; i < pinOffer.offer.photos.length; i++) {
-  //     photos[i].src = pinOffer.offer.photos[i];
-  //   }
-  // };
 
   // отображение типа помещения
   var offerType = {
@@ -296,16 +266,24 @@ var renderCard = function (pinOffer) {
 
   // отображение преимуществ
   var setCardFeatures = function () {
+    var featuresList = offerCardElement.querySelector('.popup__features');
     var features = offerCardElement.querySelectorAll('.popup__feature');
 
     features.forEach(function (item) {
-      item.classList.add('visually-hidden');
-      for (var i = 0; i < pinOffer.offer.features.length; i++) {
-        if (item.classList.contains('popup__feature--' + pinOffer.offer.features[i])) {
-          item.classList.remove('visually-hidden');
-        }
-      }
+      item.remove();
     });
+
+    for (var i = 0; i < pinOffer.offer.features.length; i++) {
+      var fragment = document.createDocumentFragment();
+      var popupFeature = document.createElement('li');
+      popupFeature.classList.add('popup__feature');
+
+      fragment.appendChild(popupFeature);
+      featuresList.appendChild(fragment);
+
+      var popupFeaturesElement = offerCardElement.querySelector('.popup__features').querySelectorAll('li');
+      popupFeaturesElement[i].classList.add('popup__feature--' + pinOffer.offer.features[i]);
+    }
   };
 
   offerCardElement.querySelector('img').src = pinOffer.author.avatar;
@@ -322,7 +300,7 @@ var renderCard = function (pinOffer) {
   return offerCardElement;
 };
 
-var renderPin = function (pinOffer) {
+var createPin = function (pinOffer) {
   var offerPinElement = pinOfferTemplate.cloneNode(true);
 
   offerPinElement.style.left = pinOffer.location.x - PIN_OFFER_OFFSET_X + 'px';
@@ -333,12 +311,15 @@ var renderPin = function (pinOffer) {
   return offerPinElement;
 };
 
-var createPinOffers = function () {
+var renderPin = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pinOffers.length; i++) {
-    fragment.appendChild(renderPin(pinOffers[i]));
+    fragment.appendChild(createPin(pinOffers[i]));
   }
-  pinOfferList.appendChild(fragment);
+  var pins = map.querySelectorAll('.map__pin');
+  if (pins.length === 1) {
+    pinOfferList.appendChild(fragment);
+  }
 };
 
 
