@@ -102,11 +102,23 @@ var makePageActive = function () {
 };
 
 mapPinMain.addEventListener('mousedown', function () {
-  renderPins();
-  makePageActive();
-  getActiveMainPinAddress();
-  renderPins();
-  setPinId();
+  if (map.classList.contains(MAP_FADED_CLASS)) {
+    renderPins();
+    makePageActive();
+    getActiveMainPinAddress();
+    setPinId();
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    if (map.classList.contains(MAP_FADED_CLASS)) {
+      renderPins();
+      makePageActive();
+      getActiveMainPinAddress();
+      setPinId();
+    }
+  }
 });
 
 var openCardOffer = function (evt) {
@@ -138,6 +150,11 @@ var closeCardOffer = function (evt) {
 };
 
 map.addEventListener('click', openCardOffer);
+map.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openCardOffer(evt);
+  }
+});
 
 map.addEventListener('click', function (evt) {
   if (evt.target.className !== 'popup__close') {
@@ -152,17 +169,6 @@ map.addEventListener('keydown', function (evt) {
     offerCard.remove();
   }
 });
-
-mapPinMain.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    renderPins();
-    makePageActive();
-    getActiveMainPinAddress();
-    renderPins();
-    setPinId();
-  }
-});
-
 
 // Генерация объектов объявления
 var renderAvatarLink = function (i) {
@@ -314,9 +320,7 @@ var renderPins = function () {
   for (var i = 0; i < pinOffers.length; i++) {
     fragment.appendChild(createPin(pinOffers[i]));
   }
-  if (map.classList.contains(MAP_FADED_CLASS)) {
-    pinOfferList.appendChild(fragment);
-  }
+  pinOfferList.appendChild(fragment);
 };
 
 
