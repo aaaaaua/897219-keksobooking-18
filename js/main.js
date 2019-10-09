@@ -102,24 +102,21 @@ var makePageActive = function () {
 };
 
 mapPinMain.addEventListener('mousedown', function () {
+  renderPins();
   makePageActive();
   getActiveMainPinAddress();
-  renderPin();
+  renderPins();
   setPinId();
 });
 
 var openCardOffer = function (evt) {
   var pin = evt.target.closest('.map__pin');
-  var mainPin = evt.target.closest('.map__pin--main');
   var card = map.querySelector('.map__card');
 
   if (!pin) {
     return;
   }
-  if (!pinOfferList.contains(pin)) {
-    return;
-  }
-  if (pin === mainPin) {
+  if (pin === mapPinMain) {
     return;
   }
   if (card) {
@@ -158,9 +155,11 @@ map.addEventListener('keydown', function (evt) {
 
 mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
+    renderPins();
     makePageActive();
     getActiveMainPinAddress();
-    renderPin();
+    renderPins();
+    setPinId();
   }
 });
 
@@ -252,14 +251,13 @@ var renderCard = function (pinOffer) {
   };
 
   // отображение типа помещения
-  var offerType = {
-    bungalo: 'Бунгало',
-    flat: 'Квартира',
-    house: 'Дом',
-    palace: 'Дворец'
-  };
-
   var displayType = function () {
+    var offerType = {
+      bungalo: 'Бунгало',
+      flat: 'Квартира',
+      house: 'Дом',
+      palace: 'Дворец'
+    };
     var type = pinOffer.offer.type;
     return offerType[type];
   };
@@ -311,13 +309,12 @@ var createPin = function (pinOffer) {
   return offerPinElement;
 };
 
-var renderPin = function () {
+var renderPins = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pinOffers.length; i++) {
     fragment.appendChild(createPin(pinOffers[i]));
   }
-  var pins = map.querySelectorAll('.map__pin');
-  if (pins.length === 1) {
+  if (map.classList.contains(MAP_FADED_CLASS)) {
     pinOfferList.appendChild(fragment);
   }
 };
@@ -378,29 +375,16 @@ var setRoomGuestValue = function () {
 setRoomGuestValue();
 
 var setFormPriceAttribute = function () {
-  var priceLimits = {
-    bungalo: {
-      min: 0
-    },
-    flat: {
-      min: 1000
-    },
-    house: {
-      min: 5000
-    },
-    palace: {
-      min: 10000
-    }
-  };
-
-  var getFormMinPrice = function () {
-    var typeValue = adFormType.value;
-    return priceLimits[typeValue].min;
+  var minPrice = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000
   };
 
   adFormType.addEventListener('change', function () {
-    adFormPrice.setAttribute('min', getFormMinPrice());
-    adFormPrice.setAttribute('placeholder', getFormMinPrice());
+    adFormPrice.setAttribute('min', minPrice[adFormType.value]);
+    adFormPrice.setAttribute('placeholder', minPrice[adFormType.value]);
   });
 
   adFormPrice.setAttribute('max', '1000000');
