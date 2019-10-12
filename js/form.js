@@ -2,13 +2,13 @@
 'use strict';
 // Валидация формы
 (function () {
-  var adForm = document.querySelector('.ad-form'); // повтор
+  window.adForm = document.querySelector('.ad-form');
   var adFormGuest = document.querySelector('#capacity');
   var adFormRooms = document.querySelector('#room_number');
-  var adFormPrice = adForm.querySelector('#price');
-  var adFormType = adForm.querySelector('#type');
-  var adFormTimein = adForm.querySelector('#timein');
-  var adFormTimeout = adForm.querySelector('#timeout');
+  var adFormPrice = window.adForm.querySelector('#price');
+  var adFormType = window.adForm.querySelector('#type');
+  var adFormTimein = window.adForm.querySelector('#timein');
+  var adFormTimeout = window.adForm.querySelector('#timeout');
 
   var setRoomGuestValue = function () {
     var adFormGuestOptions = adFormGuest.querySelectorAll('option');

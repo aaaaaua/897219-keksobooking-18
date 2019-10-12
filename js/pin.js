@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  window.PIN_OFFER_OFFSET_X = 25;
+  window.PIN_OFFER_OFFSET_Y = 70;
+
   var OFFER_TITLES = ['Нельзя пройти мимо', 'Супердом', 'Фантастично', 'Ищешь квартиру', 'Дружелюбный домик', 'Большой Дом', 'Все Новое'];
   var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
   var OFFER_CHECKINS = ['12:00', '13:00', '14:00'];
@@ -9,7 +12,6 @@
 
   var PIN_OFFER_Y_MIN = 130;
   var PIN_OFFER_Y_MAX = 630;
-  var PIN_OFFER_OFFSET_X = 25; // повтор
 
   var mapsWidth = document.querySelector('.map').offsetWidth;
   var pinOfferList = document.querySelector('.map__pins');// повтор
@@ -20,7 +22,7 @@
 
   var renderCoords = function () {
     return {
-      x: window.utils.getRandomValue(0 + PIN_OFFER_OFFSET_X, mapsWidth - PIN_OFFER_OFFSET_X),
+      x: window.utils.getRandomValue(0 + window.PIN_OFFER_OFFSET_X, mapsWidth - window.PIN_OFFER_OFFSET_X),
       y: window.utils.getRandomValue(PIN_OFFER_Y_MIN, PIN_OFFER_Y_MAX)
     };
   };

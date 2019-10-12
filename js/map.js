@@ -2,8 +2,6 @@
 
 (function () {
   // Перевод страницы в актовное состояние
-  var PIN_OFFER_OFFSET_X = 25;
-  var PIN_OFFER_OFFSET_Y = 70;
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
 
@@ -13,10 +11,7 @@
 
   var map = document.querySelector('.map');
   var mapFilterContainer = map.querySelector('.map__filters-container');
-  var adForm = document.querySelector('.ad-form');
   var mapFiltersForm = document.querySelector('.map__filters');
-
-  var mapPinMain = document.querySelector('.map__pin--main');// повтор
 
   var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinOfferList = document.querySelector('.map__pins');
@@ -31,12 +26,12 @@
 
   var makePageActive = function () {
     map.classList.remove(MAP_FADED_CLASS);
-    adForm.classList.remove(AD_FORM_DISABLED_CLASS);
+    window.adForm.classList.remove(AD_FORM_DISABLED_CLASS);
     mapFiltersForm.classList.remove(MAP_FILTER_DISABLED_CLASS);
-    makeFormElementsActive(adForm);
+    makeFormElementsActive(window.adForm);
   };
 
-  mapPinMain.addEventListener('mousedown', function () {
+  window.mapPinMain.addEventListener('mousedown', function () {
     if (map.classList.contains(MAP_FADED_CLASS)) {
       renderPins();
       makePageActive();
@@ -45,7 +40,7 @@
     }
   });
 
-  mapPinMain.addEventListener('keydown', function (evt) {
+  window.mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       if (map.classList.contains(MAP_FADED_CLASS)) {
         renderPins();
@@ -65,7 +60,7 @@
     if (!pin) {
       return;
     }
-    if (pin === mapPinMain) {
+    if (pin === window.mapPinMain) {
       return;
     }
     if (card) {
@@ -104,8 +99,8 @@
   var createPin = function (pinOffer) {
     var offerPinElement = pinOfferTemplate.cloneNode(true);
 
-    offerPinElement.style.left = pinOffer.location.x - PIN_OFFER_OFFSET_X + 'px';
-    offerPinElement.style.top = pinOffer.location.y - PIN_OFFER_OFFSET_Y + 'px';
+    offerPinElement.style.left = pinOffer.location.x - window.PIN_OFFER_OFFSET_X + 'px';
+    offerPinElement.style.top = pinOffer.location.y - window.PIN_OFFER_OFFSET_Y + 'px';
     offerPinElement.querySelector('img').src = pinOffer.author.avatar;
     offerPinElement.querySelector('img').alt = pinOffer.offer.title;
     return offerPinElement;
