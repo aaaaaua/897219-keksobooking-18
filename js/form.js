@@ -2,13 +2,12 @@
 'use strict';
 // Валидация формы
 (function () {
-  window.adForm = document.querySelector('.ad-form');
   var adFormGuest = document.querySelector('#capacity');
   var adFormRooms = document.querySelector('#room_number');
-  var adFormPrice = window.adForm.querySelector('#price');
-  var adFormType = window.adForm.querySelector('#type');
-  var adFormTimein = window.adForm.querySelector('#timein');
-  var adFormTimeout = window.adForm.querySelector('#timeout');
+  var adFormPrice = document.querySelector('#price');
+  var adFormType = document.querySelector('#type');
+  var adFormTimein = document.querySelector('#timein');
+  var adFormTimeout = document.querySelector('#timeout');
 
   var setRoomGuestValue = function () {
     var adFormGuestOptions = adFormGuest.querySelectorAll('option');
@@ -87,11 +86,7 @@
     };
   };
 
-  var setAdFormValidAttribute = function () {
-    setFormPriceAttribute();
-    setNewFormTimeInOutAttribute();
-  };
-
   setRoomGuestValue();
-  setAdFormValidAttribute();
+  setFormPriceAttribute();
+  setNewFormTimeInOutAttribute();
 })();

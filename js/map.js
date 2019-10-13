@@ -12,6 +12,7 @@
   var map = document.querySelector('.map');
   var mapFilterContainer = map.querySelector('.map__filters-container');
   var mapFiltersForm = document.querySelector('.map__filters');
+  var adForm = document.querySelector('.ad-form');
 
   var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinOfferList = document.querySelector('.map__pins');
@@ -26,9 +27,9 @@
 
   var makePageActive = function () {
     map.classList.remove(MAP_FADED_CLASS);
-    window.adForm.classList.remove(AD_FORM_DISABLED_CLASS);
+    adForm.classList.remove(AD_FORM_DISABLED_CLASS);
     mapFiltersForm.classList.remove(MAP_FILTER_DISABLED_CLASS);
-    makeFormElementsActive(window.adForm);
+    makeFormElementsActive(adForm);
   };
 
   window.mapPinMain.addEventListener('mousedown', function () {
