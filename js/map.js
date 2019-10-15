@@ -17,6 +17,8 @@
   var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinOfferList = document.querySelector('.map__pins');
 
+  var pinOffers = window.makePinOfferArr();
+
   // перевод страницы в активное состояние
   var makeFormElementsActive = function (form) {
     var formFieldsets = form.querySelectorAll('fieldset');
@@ -66,7 +68,7 @@
     if (card) {
       map.removeChild(card);
     }
-    map.insertBefore(window.renderCard(window.pinOffers[pin.id - 1]), mapFilterContainer);
+    map.insertBefore(window.renderCard(pinOffers[pin.id - 1]), mapFilterContainer);
   };
 
   var closeCardOffer = function (evt) {
@@ -108,8 +110,8 @@
 
   var renderPins = function () {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.pinOffers.length; i++) {
-      fragment.appendChild(createPin(window.pinOffers[i]));
+    for (var i = 0; i < pinOffers.length; i++) {
+      fragment.appendChild(createPin(pinOffers[i]));
     }
     pinOfferList.appendChild(fragment);
   };
