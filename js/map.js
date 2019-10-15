@@ -52,7 +52,6 @@
     }
   });
 
-
   // открытие-закрытие карточки объявления
   var openCardOffer = function (evt) {
     var pin = evt.target.closest('.map__pin');

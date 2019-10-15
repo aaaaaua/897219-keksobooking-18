@@ -63,13 +63,4 @@
     };
     return pinOffer;
   };
-
-  var makePinOfferArr = function () {
-    var pinOfferArr = [];
-    for (var i = 1; i <= 8; i++) {
-      pinOfferArr.push(window.makePinOffer(i));
-    }
-    return pinOfferArr;
-  };
-  window.pinOffers = makePinOfferArr();
 })();

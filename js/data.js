@@ -6,4 +6,13 @@
   window.OFFER_CHECKINS = ['12:00', '13:00', '14:00'];
   window.OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   window.OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+
+  var makePinOfferArr = function () {
+    var pinOfferArr = [];
+    for (var i = 1; i <= 8; i++) {
+      pinOfferArr.push(window.makePinOffer(i));
+    }
+    return pinOfferArr;
+  };
+  window.pinOffers = makePinOfferArr();
 })();

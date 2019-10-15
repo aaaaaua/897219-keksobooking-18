@@ -9,14 +9,15 @@
 
     var createOfferPhotoElements = function () {
       var popupPhotosList = offerCardElement.querySelector('.popup__photos');
-      for (var i = 0; i < pinOffer.offer.photos.length - 1; i++) {
-        var PopupPhoto = offerCardElement.querySelector('.popup__photo').cloneNode(true);
-        popupPhotosList.appendChild(PopupPhoto);
+      var fragment = document.createDocumentFragment();
+
+      for (var i = 0; i < pinOffer.offer.photos.length; i++) {
+        var popupPhoto = offerCardElement.querySelector('.popup__photo').cloneNode(true);
+        popupPhoto.src = pinOffer.offer.photos[i];
+        fragment.appendChild(popupPhoto);
       }
-      for (var j = 0; j < pinOffer.offer.photos.length; j++) {
-        var photos = popupPhotosList.querySelectorAll('img');
-        photos[j].src = pinOffer.offer.photos[j];
-      }
+      popupPhotosList.innerHTML = '';
+      popupPhotosList.appendChild(fragment);
     };
 
     // отображение типа помещения
