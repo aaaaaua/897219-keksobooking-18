@@ -3,6 +3,8 @@
 (function () {
   // КАРТОЧКА ОБЪЯВЛЕНИЙ
   var cardOfferTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var map = document.querySelector('.map'); // copy
+  var mapFilterContainer = map.querySelector('.map__filters-container');
 
   window.renderCard = function (pinOffer) {
     var offerCardElement = cardOfferTemplate.cloneNode(true);
@@ -54,5 +56,27 @@
     createOfferPhotoElements();
 
     return offerCardElement;
+  };
+
+  // открытие-закрытие карточки объявления
+  window.openCardOffer = function (evt) {
+    var pin = evt.target.closest('.map__pin');
+    var card = map.querySelector('.map__card');
+
+    if (!pin) {
+      return;
+    }
+    if (pin === window.mapPinMain) {
+      return;
+    }
+    if (card) {
+      map.removeChild(card);
+    }
+    map.insertBefore(window.renderCard(window.pinOffers[pin.id - 1]), mapFilterContainer);
+  };
+
+  window.closeCardOffer = function (evt) {
+    var offerCard = evt.target.closest('.map__card');
+    offerCard.remove();
   };
 })();

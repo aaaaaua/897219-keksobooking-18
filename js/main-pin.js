@@ -5,7 +5,6 @@
   var MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE = 84;
   var adFormAdress = document.querySelector('#address');
 
-
   // Координаты главной метки в неактивном состоянии
   var getInactiveMainPinAddress = function () {
     var mainPinCoords = window.utils.getCoords(window.mapPinMain);
