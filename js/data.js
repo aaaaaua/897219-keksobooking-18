@@ -1,11 +1,11 @@
 'use strict';
 
 (function () {
-  window.OFFER_TITLES = ['Нельзя пройти мимо', 'Супердом', 'Фантастично', 'Ищешь квартиру', 'Дружелюбный домик', 'Большой Дом', 'Все Новое'];
-  window.OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
-  window.OFFER_CHECKINS = ['12:00', '13:00', '14:00'];
-  window.OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-  window.OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+  var OFFER_TITLES = ['Нельзя пройти мимо', 'Супердом', 'Фантастично', 'Ищешь квартиру', 'Дружелюбный домик', 'Большой Дом', 'Все Новое'];
+  var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
+  var OFFER_CHECKINS = ['12:00', '13:00', '14:00'];
+  var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
   window.PIN_OFFER_OFFSET_X = 25;
   window.PIN_OFFER_OFFSET_Y = 70;
@@ -41,17 +41,17 @@
       },
 
       offer: {
-        title: window.utils.getRandomArrValue(window.OFFER_TITLES),
+        title: window.utils.getRandomArrValue(OFFER_TITLES),
         address: pinCoordsХ.toString() + ', ' + pinCoordsY.toString(),
         price: window.utils.getRandomIntegerValue(100, 5000),
-        type: window.utils.getRandomArrValue(window.OFFER_TYPES),
+        type: window.utils.getRandomArrValue(OFFER_TYPES),
         rooms: offerRooms,
         guests: getOfferGuestsValue(offerRooms),
-        checkin: window.utils.getRandomArrValue(window.OFFER_CHECKINS),
-        checkout: window.utils.getRandomArrValue(window.OFFER_CHECKINS),
-        features: window.utils.getRandomArrNValues(window.OFFER_FEATURES, window.utils.getRandomIntegerValue(1, 6)),
-        description: window.utils.getRandomArrValue(window.OFFER_TITLES),
-        photos: window.utils.getRandomArrNValues(window.OFFER_PHOTOS, window.utils.getRandomIntegerValue(1, 3))
+        checkin: window.utils.getRandomArrValue(OFFER_CHECKINS),
+        checkout: window.utils.getRandomArrValue(OFFER_CHECKINS),
+        features: window.utils.getRandomArrNValues(OFFER_FEATURES, window.utils.getRandomIntegerValue(1, 6)),
+        description: window.utils.getRandomArrValue(OFFER_TITLES),
+        photos: window.utils.getRandomArrNValues(OFFER_PHOTOS, window.utils.getRandomIntegerValue(1, 3))
       },
 
       location: {
