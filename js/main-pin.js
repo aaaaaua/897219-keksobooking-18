@@ -50,8 +50,8 @@
       var limits = {
         left: 0,
         right: mapsWidth - MAIN_PIN_WIDTH,
-        top: 0,
-        bottom: mapHeight - MAIN_PIN_HEIGHT
+        top: 130,
+        bottom: 630
       };
 
       if (window.mapPinMain.offsetTop - shift.y >= limits.top && window.mapPinMain.offsetTop - shift.y <= limits.bottom) {
