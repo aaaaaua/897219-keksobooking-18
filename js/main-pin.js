@@ -1,14 +1,13 @@
 'use strict';
 (function () {
   window.mapPinMain = document.querySelector('.map__pin--main');
-  var MAIN_PIN_HEIGHT = 84;
   var MAIN_PIN_WIDTH = 62;
+  var MAIN_PIN_HEIGHT = 84;
   var MAPS_PIN_MAIN_OFFSET = 31;
   var MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE = 84;
   var adFormAdress = document.querySelector('#address');
 
   var mapsWidth = document.querySelector('.map').offsetWidth;
-  var mapHeight = document.querySelector('.map').offsetHeight;
 
   // Координаты главной метки в неактивном состоянии
   var getInactiveMainPinAddress = function () {
@@ -31,11 +30,8 @@
       y: downEvt.clientY
     };
 
-    var dragged = false;
-
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      dragged = true;
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -50,8 +46,8 @@
       var limits = {
         left: 0,
         right: mapsWidth - MAIN_PIN_WIDTH,
-        top: 130,
-        bottom: 630
+        top: 130 - MAIN_PIN_HEIGHT,
+        bottom: 630 - MAIN_PIN_HEIGHT
       };
 
       if (window.mapPinMain.offsetTop - shift.y >= limits.top && window.mapPinMain.offsetTop - shift.y <= limits.bottom) {
@@ -70,14 +66,6 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-
-      if (dragged) {
-        var onClickPreventDefault = function (evt) {
-          evt.preventDefault();
-          window.mapPinMain.removeEventListener('click', onClickPreventDefault);
-        };
-        window.mapPinMain.addEventListener('click', onClickPreventDefault);
-      }
       window.getActiveMainPinAddress();
     };
 
