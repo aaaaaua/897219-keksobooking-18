@@ -38,6 +38,12 @@ window.utils = (function () {
         y: box.y + pageYOffset,
         x: box.x + pageXOffset
       };
+    },
+    getCoordsAlt: function (elem) {
+      return {
+        y: elem.offsetTop,
+        x: elem.offsetLeft
+      };
     }
   };
 })();
