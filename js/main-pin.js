@@ -10,13 +10,13 @@
   var mapsWidth = document.querySelector('.map').offsetWidth;
   // Координаты главной метки в неактивном состоянии
   var getInactiveMainPinAddress = function () {
-    var mainPinCoords = window.utils.getCoordsAlt(window.mapPinMain);
+    var mainPinCoords = window.utils.getCoords(window.mapPinMain);
     adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET);
   };
 
   // Координаты главной метки в активном состоянии
   window.getActiveMainPinAddress = function () {
-    var mainPinCoords = window.utils.getCoordsAlt(window.mapPinMain);
+    var mainPinCoords = window.utils.getCoords(window.mapPinMain);
     adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE);
   };
   getInactiveMainPinAddress();

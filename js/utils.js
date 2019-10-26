@@ -32,14 +32,7 @@ window.utils = (function () {
       });
       return shuffled.slice(0, n);
     },
-    getCoords: function (elem) { // получение координат элемента
-      var box = elem.getBoundingClientRect();
-      return {
-        y: box.y + pageYOffset,
-        x: box.x + pageXOffset
-      };
-    },
-    getCoordsAlt: function (elem) {
+    getCoords: function (elem) {
       return {
         y: elem.offsetTop,
         x: elem.offsetLeft
