@@ -13,7 +13,20 @@
   var mapFiltersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
 
+  var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
   // перевод страницы в активное состояние
+  var onLoadOffers = function (pinOffers) {
+    window.makePin(pinOffers);
+    window.offerArr = pinOffers;
+  };
+
+  var onError = function () {
+    var loadError = errorTemplate.cloneNode(true);
+    map.appendChild(loadError);
+  };
+
   var makeFormElementsActive = function (form) {
     var formFieldsets = form.querySelectorAll('fieldset');
     for (var i = 0; i < formFieldsets.length; i++) {
@@ -30,20 +43,18 @@
 
   window.mapPinMain.addEventListener('mousedown', function () {
     if (map.classList.contains(MAP_FADED_CLASS)) {
-      window.renderPins();
       makePageActive();
       window.getActiveMainPinAddress();
-      window.setPinId();
+      window.backend.load(LOAD_URL, onLoadOffers, onError);
     }
   });
 
   window.mapPinMain.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       if (map.classList.contains(MAP_FADED_CLASS)) {
-        window.renderPins();
         makePageActive();
         window.getActiveMainPinAddress();
-        window.setPinId();
+        window.backend.load(LOAD_URL, onLoadOffers, onError);
       }
     }
   });

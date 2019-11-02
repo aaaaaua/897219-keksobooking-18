@@ -7,9 +7,6 @@
   var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-  window.PIN_OFFER_OFFSET_X = 25;
-  window.PIN_OFFER_OFFSET_Y = 70;
-
   var PIN_OFFER_Y_MIN = 130;
   var PIN_OFFER_Y_MAX = 630;
 

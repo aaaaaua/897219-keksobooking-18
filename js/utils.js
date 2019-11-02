@@ -25,14 +25,14 @@ window.utils = (function () {
     getRandomValue: function (min, max) { // возвращает случайное число из заданного диапазона
       return min + Math.random() * (max - min);
     },
-    getRandomArrNValues: function (array, n) { // возвращает случаное колличество элементов из массива
+    getRandomArrNValues: function (array, n) { // возвращает заданное колличество случайных элементов из массива
       var arrayCopy = array.slice();
       var shuffled = arrayCopy.sort(function () {
         return Math.random() - 0.5;
       });
       return shuffled.slice(0, n);
     },
-    getCoords: function (elem) {
+    getCoords: function (elem) { // возвращает координаты элемента
       return {
         y: elem.offsetTop,
         x: elem.offsetLeft
