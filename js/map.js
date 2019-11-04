@@ -151,6 +151,7 @@
     var errorMessage = document.querySelector('.error');
     if (errorMessage) {
       errorMessage.remove();
+      makePageDisabled();
     }
   });
 
@@ -158,6 +159,7 @@
     var errorMessage = document.querySelector('.error');
     if (evt.keyCode === ESC_KEYCODE && errorMessage) {
       errorMessage.remove();
+      makePageDisabled();
     }
   });
 })();
