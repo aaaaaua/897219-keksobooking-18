@@ -105,17 +105,6 @@
       offerCardElement.querySelector('.popup__photo').classList.add('visually-hidden');
     }
 
-    // offerCardElement.querySelector('img').src = pinOffer.author.avatar;
-    // offerCardElement.querySelector('.popup__title').textContent = pinOffer.offer.title;
-    // offerCardElement.querySelector('.popup__text--address').textContent = pinOffer.offer.address;
-    // offerCardElement.querySelector('.popup__text--price').textContent = pinOffer.offer.price + '₽/ночь';
-    // offerCardElement.querySelector('.popup__type').textContent = offerType[pinOffer.offer.type];
-    // offerCardElement.querySelector('.popup__text--capacity').textContent = pinOffer.offer.rooms + ' комнаты для ' + pinOffer.offer.guests + ' гостей';
-    // offerCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + pinOffer.offer.checkin + ', выезд до ' + pinOffer.offer.checkout;
-    // setCardFeatures();
-    // offerCardElement.querySelector('.popup__description').textContent = pinOffer.offer.description;
-    // createOfferPhotoElements();
-
     return offerCardElement;
   };
 

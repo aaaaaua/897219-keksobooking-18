@@ -16,7 +16,6 @@
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
-  // перевод страницы в активное состояние
   var onLoadOffers = function (pinOffers) {
     window.makePin(pinOffers);
     window.offerArr = pinOffers;
