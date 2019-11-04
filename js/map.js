@@ -29,7 +29,6 @@
   var onError = function () {
     var loadError = errorTemplate.cloneNode(true);
     map.appendChild(loadError);
-    window.errorButton = document.querySelector('.error__button');
   };
 
   var onSuccessSubmit = function () {
