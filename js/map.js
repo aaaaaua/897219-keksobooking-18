@@ -14,7 +14,7 @@
   var adForm = document.querySelector('.ad-form');
   var formFieldsets = adForm.querySelectorAll('fieldset');
 
-  var MAIN_PIN_START_COORDS = 'left: 570px; top: 375px;';
+  var mainPinStartCoords = window.utils.getCoords(window.mapPinMain);
 
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var SAVE_URL = 'https://js.dump.academy/keksobooking';
@@ -70,7 +70,7 @@
     map.classList.add(MAP_FADED_CLASS);
     adForm.classList.add(AD_FORM_DISABLED_CLASS);
     mapFiltersForm.classList.add(MAP_FILTER_DISABLED_CLASS);
-    window.mapPinMain.style.cssText = MAIN_PIN_START_COORDS;
+    window.mapPinMain.style.cssText = 'left: ' + mainPinStartCoords.x + 'px; top: ' + mainPinStartCoords.y + 'px;';
     makeFormElementsDisabled();
   };
 
@@ -150,7 +150,6 @@
     var errorMessage = document.querySelector('.error');
     if (errorMessage) {
       errorMessage.remove();
-      makePageDisabled();
     }
   });
 
@@ -158,7 +157,6 @@
     var errorMessage = document.querySelector('.error');
     if (evt.keyCode === ESC_KEYCODE && errorMessage) {
       errorMessage.remove();
-      makePageDisabled();
     }
   });
 })();
