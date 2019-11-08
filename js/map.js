@@ -26,14 +26,35 @@
     window.offerArr = pinOffers;
   };
 
-  var onError = function () {
-    var loadError = errorTemplate.cloneNode(true);
-    map.appendChild(loadError);
-  };
-
   var onSuccessSubmit = function () {
     var successSubmit = successTemplate.cloneNode(true);
     map.appendChild(successSubmit);
+  };
+
+  var onLoadError = function () {
+    var loadError = errorTemplate.cloneNode(true);
+    map.appendChild(loadError);
+    document.addEventListener('click', function (evt) {
+      var errorMessage = document.querySelector('.error');
+      var errorButton = evt.target.closest('.error__button');
+      if (errorMessage && errorButton) {
+        makePageDisabled();
+      }
+      if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, {once: true});
+  };
+
+  var onSubmitError = function () {
+    var loadError = errorTemplate.cloneNode(true);
+    map.appendChild(loadError);
+    document.addEventListener('click', function () {
+      var errorMessage = document.querySelector('.error');
+      if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, {once: true});
   };
 
   var makeFormElementsActive = function () {
@@ -78,7 +99,7 @@
     if (map.classList.contains(MAP_FADED_CLASS)) {
       makePageActive();
       window.getActiveMainPinAddress();
-      window.backend.load(LOAD_URL, onLoadOffers, onError);
+      window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
     }
   });
 
@@ -87,7 +108,7 @@
       if (map.classList.contains(MAP_FADED_CLASS)) {
         makePageActive();
         window.getActiveMainPinAddress();
-        window.backend.load(LOAD_URL, onLoadOffers, onError);
+        window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
       }
     }
   });
@@ -126,7 +147,7 @@
       if (offerCard) {
         offerCard.remove();
       }
-    }, onError);
+    }, onSubmitError);
     evt.preventDefault();
   });
 
@@ -146,13 +167,6 @@
   });
 
   // Закрытие сообщения об ошибке при загрузке объявления на сервер
-  document.addEventListener('click', function () {
-    var errorMessage = document.querySelector('.error');
-    if (errorMessage) {
-      errorMessage.remove();
-    }
-  });
-
   document.addEventListener('keydown', function (evt) {
     var errorMessage = document.querySelector('.error');
     if (evt.keyCode === ESC_KEYCODE && errorMessage) {
