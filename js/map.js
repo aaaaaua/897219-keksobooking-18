@@ -48,15 +48,6 @@
         window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
       }
     }, {once: true});
-
-    document.addEventListener('keydown', function (evt) {
-      var errorMessage = document.querySelector('.error');
-      var pins = map.querySelectorAll('.map__pin');
-      if (evt.keyCode === ESC_KEYCODE && errorMessage && !pins) {
-        errorMessage.remove();
-        map.classList.add(MAP_FADED_CLASS);
-      }
-    }, {once: true});
   };
 
   var onSubmitError = function () {
@@ -65,12 +56,6 @@
     document.addEventListener('click', function () {
       var errorMessage = document.querySelector('.error');
       if (errorMessage) {
-        errorMessage.remove();
-      }
-    }, {once: true});
-    document.addEventListener('keydown', function (evt) {
-      var errorMessage = document.querySelector('.error');
-      if (evt.keyCode === ESC_KEYCODE && errorMessage) {
         errorMessage.remove();
       }
     }, {once: true});
@@ -182,6 +167,17 @@
     var successMessage = document.querySelector('.success');
     if (evt.keyCode === ESC_KEYCODE && successMessage) {
       successMessage.remove();
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    var errorMessage = document.querySelector('.error');
+    var pins = map.querySelectorAll('.map__pin');
+    if (evt.keyCode === ESC_KEYCODE && errorMessage && pins.length <= 1) {
+      errorMessage.remove();
+      map.classList.add(MAP_FADED_CLASS);
+    } else if (evt.keyCode === ESC_KEYCODE && errorMessage) {
+      errorMessage.remove();
     }
   });
 })();
