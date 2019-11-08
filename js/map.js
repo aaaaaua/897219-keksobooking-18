@@ -34,12 +34,8 @@
   var onLoadError = function () {
     var loadError = errorTemplate.cloneNode(true);
     map.appendChild(loadError);
-    document.addEventListener('click', function (evt) {
+    document.addEventListener('click', function () {
       var errorMessage = document.querySelector('.error');
-      var errorButton = evt.target.closest('.error__button');
-      if (errorMessage && errorButton) {
-        makePageDisabled();
-      }
       if (errorMessage) {
         errorMessage.remove();
         map.classList.add(MAP_FADED_CLASS);
