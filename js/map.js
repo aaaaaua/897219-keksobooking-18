@@ -34,9 +34,25 @@
   var onLoadError = function () {
     var loadError = errorTemplate.cloneNode(true);
     map.appendChild(loadError);
-    document.addEventListener('click', function () {
+
+    document.addEventListener('click', function (evt) {
       var errorMessage = document.querySelector('.error');
+      var errorButton = evt.target.closest('.error__button');
       if (errorMessage) {
+        errorMessage.remove();
+        map.classList.add(MAP_FADED_CLASS);
+      }
+      if (errorMessage && errorButton) {
+        errorMessage.remove();
+        map.classList.remove(MAP_FADED_CLASS);
+        window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
+      }
+    }, {once: true});
+
+    document.addEventListener('keydown', function (evt) {
+      var errorMessage = document.querySelector('.error');
+      var pins = map.querySelectorAll('.map__pin');
+      if (evt.keyCode === ESC_KEYCODE && errorMessage && !pins) {
         errorMessage.remove();
         map.classList.add(MAP_FADED_CLASS);
       }
@@ -49,6 +65,12 @@
     document.addEventListener('click', function () {
       var errorMessage = document.querySelector('.error');
       if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, {once: true});
+    document.addEventListener('keydown', function (evt) {
+      var errorMessage = document.querySelector('.error');
+      if (evt.keyCode === ESC_KEYCODE && errorMessage) {
         errorMessage.remove();
       }
     }, {once: true});
@@ -160,14 +182,6 @@
     var successMessage = document.querySelector('.success');
     if (evt.keyCode === ESC_KEYCODE && successMessage) {
       successMessage.remove();
-    }
-  });
-
-  // Закрытие сообщения об ошибке при загрузке объявления на сервер
-  document.addEventListener('keydown', function (evt) {
-    var errorMessage = document.querySelector('.error');
-    if (evt.keyCode === ESC_KEYCODE && errorMessage) {
-      errorMessage.remove();
     }
   });
 })();
