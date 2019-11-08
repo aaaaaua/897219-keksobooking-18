@@ -42,6 +42,7 @@
       }
       if (errorMessage) {
         errorMessage.remove();
+        map.classList.add(MAP_FADED_CLASS);
       }
     }, {once: true});
   };
