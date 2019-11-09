@@ -12,24 +12,64 @@
   var map = document.querySelector('.map');// copy
   var mapFiltersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
+  var formFieldsets = adForm.querySelectorAll('fieldset');
+
+  var mainPinStartCoords = window.utils.getCoords(window.mapPinMain);
 
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
+  var SAVE_URL = 'https://js.dump.academy/keksobooking';
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var onLoadOffers = function (pinOffers) {
     window.makePin(pinOffers);
     window.offerArr = pinOffers;
   };
 
-  var onError = function () {
-    var loadError = errorTemplate.cloneNode(true);
-    map.appendChild(loadError);
+  var onSuccessSubmit = function () {
+    var successSubmit = successTemplate.cloneNode(true);
+    map.appendChild(successSubmit);
   };
 
-  var makeFormElementsActive = function (form) {
-    var formFieldsets = form.querySelectorAll('fieldset');
+  var onLoadError = function () {
+    var loadError = errorTemplate.cloneNode(true);
+    map.appendChild(loadError);
+
+    document.addEventListener('click', function (evt) {
+      var errorMessage = document.querySelector('.error');
+      var errorButton = evt.target.closest('.error__button');
+      if (errorMessage) {
+        errorMessage.remove();
+        map.classList.add(MAP_FADED_CLASS);
+      }
+      if (errorMessage && errorButton) {
+        errorMessage.remove();
+        map.classList.remove(MAP_FADED_CLASS);
+        window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
+      }
+    }, {once: true});
+  };
+
+  var onSubmitError = function () {
+    var loadError = errorTemplate.cloneNode(true);
+    map.appendChild(loadError);
+    document.addEventListener('click', function () {
+      var errorMessage = document.querySelector('.error');
+      if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, {once: true});
+  };
+
+  var makeFormElementsActive = function () {
     for (var i = 0; i < formFieldsets.length; i++) {
       formFieldsets[i].removeAttribute('disabled');
+    }
+  };
+
+  var makeFormElementsDisabled = function () {
+    for (var i = 0; i < formFieldsets.length; i++) {
+      formFieldsets[i].setAttribute('disabled', 'disabled');
     }
   };
 
@@ -40,11 +80,30 @@
     makeFormElementsActive(adForm);
   };
 
+  var removeMapPin = function () {
+    var pins = map.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+  };
+
+  var makePageDisabled = function () {
+    removeMapPin();
+    adForm.reset();
+    map.classList.add(MAP_FADED_CLASS);
+    adForm.classList.add(AD_FORM_DISABLED_CLASS);
+    mapFiltersForm.classList.add(MAP_FILTER_DISABLED_CLASS);
+    window.mapPinMain.style.cssText = 'left: ' + mainPinStartCoords.x + 'px; top: ' + mainPinStartCoords.y + 'px;';
+    makeFormElementsDisabled();
+  };
+
   window.mapPinMain.addEventListener('mousedown', function () {
     if (map.classList.contains(MAP_FADED_CLASS)) {
       makePageActive();
       window.getActiveMainPinAddress();
-      window.backend.load(LOAD_URL, onLoadOffers, onError);
+      window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
     }
   });
 
@@ -53,11 +112,12 @@
       if (map.classList.contains(MAP_FADED_CLASS)) {
         makePageActive();
         window.getActiveMainPinAddress();
-        window.backend.load(LOAD_URL, onLoadOffers, onError);
+        window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
       }
     }
   });
 
+  // Открытие карточки объявления
   map.addEventListener('click', window.openCardOffer);
   map.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
@@ -65,6 +125,7 @@
     }
   });
 
+  // Закрытие карточки объявления
   map.addEventListener('click', function (evt) {
     if (evt.target.className !== 'popup__close') {
       return;
@@ -76,6 +137,47 @@
     var offerCard = document.querySelector('.map__card');
     if (evt.keyCode === ESC_KEYCODE && offerCard) {
       offerCard.remove();
+    }
+  });
+
+  // Отправка своего объявления на сревер
+  adForm.addEventListener('submit', function (evt) {
+    var offerCard = document.querySelector('.map__card');
+    window.backend.save(SAVE_URL, new FormData(adForm), function (response) {
+      if (response) {
+        makePageDisabled();
+        onSuccessSubmit();
+      }
+      if (offerCard) {
+        offerCard.remove();
+      }
+    }, onSubmitError);
+    evt.preventDefault();
+  });
+
+  // Закрытие сообщения об успешной загрузке объявления на сервер
+  document.addEventListener('click', function () {
+    var successMessage = document.querySelector('.success');
+    if (successMessage) {
+      successMessage.remove();
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    var successMessage = document.querySelector('.success');
+    if (evt.keyCode === ESC_KEYCODE && successMessage) {
+      successMessage.remove();
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    var errorMessage = document.querySelector('.error');
+    var pins = map.querySelectorAll('.map__pin');
+    if (evt.keyCode === ESC_KEYCODE && errorMessage && pins.length <= 1) {
+      errorMessage.remove();
+      map.classList.add(MAP_FADED_CLASS);
+    } else if (evt.keyCode === ESC_KEYCODE && errorMessage) {
+      errorMessage.remove();
     }
   });
 })();
