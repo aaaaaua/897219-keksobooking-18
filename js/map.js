@@ -14,6 +14,8 @@
   var adForm = document.querySelector('.ad-form');
   var formFieldsets = adForm.querySelectorAll('fieldset');
 
+  var mapFilterType = document.querySelector('#housing-type');
+
   var mainPinStartCoords = window.utils.getCoords(window.mapPinMain);
 
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
@@ -22,8 +24,9 @@
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var onLoadOffers = function (pinOffers) {
-    window.makePin(pinOffers);
     window.offerArr = pinOffers;
+    window.sortOfferArr = window.offerArr.slice();
+    window.makePin(window.sortOfferArr.slice(0, 5));
   };
 
   var onSuccessSubmit = function () {
@@ -82,11 +85,11 @@
 
   var removeMapPin = function () {
     var pins = map.querySelectorAll('.map__pin');
-    for (var i = 0; i < pins.length; i++) {
-      if (!pins[i].classList.contains('map__pin--main')) {
-        pins[i].remove();
+    pins.forEach(function (pin) {
+      if (!pin.classList.contains('map__pin--main')) {
+        pin.remove();
       }
-    }
+    });
   };
 
   var makePageDisabled = function () {
@@ -179,5 +182,17 @@
     } else if (evt.keyCode === ESC_KEYCODE && errorMessage) {
       errorMessage.remove();
     }
+  });
+
+  // Сортировка объявлений по типу
+  mapFilterType.addEventListener('change', function () {
+    window.sortOfferArr = window.offerArr.filter(function (pinOffer) {
+      if (mapFilterType.value === 'any') {
+        return pinOffer.offer;
+      }
+      return pinOffer.offer.type === mapFilterType.value;
+    });
+    removeMapPin();
+    window.makePin(window.sortOfferArr.slice(0, 5));
   });
 })();

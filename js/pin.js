@@ -7,13 +7,14 @@
   var PIN_OFFER_OFFSET_Y = 70;
 
   // создание и отрисовка меток объявлений на карте
-  var createPin = function (pinOffer) {
+  var createPin = function (pinOffer, pinId) {
     var offerPinElement = pinOfferTemplate.cloneNode(true);
 
     offerPinElement.style.left = pinOffer.location.x - PIN_OFFER_OFFSET_X + 'px';
     offerPinElement.style.top = pinOffer.location.y - PIN_OFFER_OFFSET_Y + 'px';
     offerPinElement.querySelector('img').src = pinOffer.author.avatar;
     offerPinElement.querySelector('img').alt = pinOffer.offer.title;
+    offerPinElement.setAttribute('id', pinId);
 
     return offerPinElement;
   };
@@ -21,24 +22,15 @@
   var renderPin = function (pinOffers) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pinOffers.length; i++) {
+      var pinId = pinOffers.indexOf(pinOffers[i]);
       if (pinOffers[i].offer) {
-        fragment.appendChild(createPin(pinOffers[i]));
+        fragment.appendChild(createPin(pinOffers[i], pinId));
       }
     }
     pinOfferList.appendChild(fragment);
   };
 
-  var setPinId = function () {
-    var pinOffersElements = pinOfferList.querySelectorAll('.map__pin');
-    for (var i = 0; i < pinOffersElements.length; i++) {
-      if (!pinOffersElements[i].classList.contains('map__pin--main')) {
-        pinOffersElements[i].setAttribute('id', i);
-      }
-    }
-  };
-
   window.makePin = function (pinOffers) {
     renderPin(pinOffers);
-    setPinId();
   };
 })();

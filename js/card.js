@@ -122,7 +122,7 @@
     if (card) {
       map.removeChild(card);
     }
-    map.insertBefore(window.renderCard(window.offerArr[pin.id - 1]), mapFilterContainer);
+    map.insertBefore(window.renderCard(window.sortOfferArr[pin.id]), mapFilterContainer);
   };
 
   window.closeCardOffer = function (evt) {
