@@ -186,12 +186,16 @@
 
   // Сортировка объявлений по типу
   mapFilterType.addEventListener('change', function () {
+    var offerCard = document.querySelector('.map__card');
     window.sortOfferArr = window.offerArr.filter(function (pinOffer) {
       if (mapFilterType.value === 'any') {
         return pinOffer.offer;
       }
       return pinOffer.offer.type === mapFilterType.value;
     });
+    if (offerCard) {
+      offerCard.remove();
+    }
     removeMapPin();
     window.makePin(window.sortOfferArr.slice(0, 5));
   });
