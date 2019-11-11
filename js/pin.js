@@ -22,7 +22,6 @@
   var renderPin = function (pinOffers) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pinOffers.length; i++) {
-      // var pinId = pinOffers.indexOf(pinOffers[i]);
       if (pinOffers[i].offer) {
         fragment.appendChild(createPin(pinOffers[i], i));
       }
