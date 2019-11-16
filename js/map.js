@@ -15,6 +15,10 @@
   var formFieldsets = adForm.querySelectorAll('fieldset');
 
   var mapFilterType = document.querySelector('#housing-type');
+  var mapFilterPrice = document.querySelector('#housing-price');
+  var mapFilterRoom = document.querySelector('#housing-rooms');
+  var mapFilterGuest = document.querySelector('#housing-guests');
+  var mapFilterFeatures = document.querySelector('#housing-features');
 
   var mainPinStartCoords = window.utils.getCoords(window.mapPinMain);
 
@@ -186,17 +190,64 @@
 
   // Сортировка объявлений по типу
   mapFilterType.addEventListener('change', function () {
+    filterOffer();
+  });
+  mapFilterPrice.addEventListener('change', function () {
+    filterOffer();
+  });
+  mapFilterRoom.addEventListener('change', function () {
+    filterOffer();
+  });
+  mapFilterGuest.addEventListener('change', function () {
+    filterOffer();
+  });
+  mapFilterFeatures.addEventListener('change', function () {
+    filterOffer();
+  });
+
+  var filterOffer = function () {
     var offerCard = document.querySelector('.map__card');
     window.sortOfferArr = window.offerArr.filter(function (pinOffer) {
       if (mapFilterType.value === 'any') {
-        return pinOffer.offer;
+        return pinOffer.offer.type;
       }
       return pinOffer.offer.type === mapFilterType.value;
+    }).filter(function (pinOffer) {
+      var filterPriceLimit = {
+        any: pinOffer.offer.type,
+        middle: pinOffer.offer.price >= 10000 && pinOffer.offer.price <= 50000,
+        low: pinOffer.offer.price < 10000,
+        high: pinOffer.offer.price >= 50000
+      };
+      return filterPriceLimit[mapFilterPrice.value];
+    }).filter(function (pinOffer) {
+      if (mapFilterRoom.value === 'any') {
+        return pinOffer.offer.rooms;
+      }
+      return pinOffer.offer.rooms.toString() === mapFilterRoom.value;
+    }).filter(function (pinOffer) {
+      if (mapFilterGuest.value === 'any') {
+        return pinOffer.offer.guests;
+      }
+      return pinOffer.offer.guests.toString() === mapFilterGuest.value;
+    }).filter(function (pinOffer) {
+      var featuresChekedList = mapFilterFeatures.querySelectorAll('input:checked');
+      var featuresChekedListValue = [];
+      featuresChekedList.forEach(function (input) {
+        featuresChekedListValue.push(input.value);
+      });
+      if (featuresChekedListValue.length <= 0) {
+        return true;
+      }
+      var filter = pinOffer.offer.features.filter(function (feature) {
+        return featuresChekedListValue.includes(feature);
+      });
+      return filter.length >= featuresChekedListValue.length;
     });
     if (offerCard) {
       offerCard.remove();
     }
     removeMapPin();
     window.makePin(window.sortOfferArr.slice(0, 5));
-  });
+  };
 })();
