@@ -3,7 +3,7 @@
 (function () {
   // КАРТОЧКА ОБЪЯВЛЕНИЙ
   var cardOfferTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var map = document.querySelector('.map'); // copy
+  var map = document.querySelector('.map');
   var mapFilterContainer = map.querySelector('.map__filters-container');
 
   window.renderCard = function (pinOffer) {
@@ -122,7 +122,7 @@
     if (card) {
       map.removeChild(card);
     }
-    map.insertBefore(window.renderCard(window.sortOfferArr[pin.id]), mapFilterContainer);
+    map.insertBefore(window.renderCard(window.sortOffersArr[pin.id]), mapFilterContainer);
   };
 
   window.closeCardOffer = function (evt) {

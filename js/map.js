@@ -9,14 +9,22 @@
   var AD_FORM_DISABLED_CLASS = 'ad-form--disabled';
   var MAP_FILTER_DISABLED_CLASS = 'map__filters--disabled';
 
-  var map = document.querySelector('.map');// copy
+  var map = document.querySelector('.map');
   var mapFiltersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
   var formFieldsets = adForm.querySelectorAll('fieldset');
+  var adFormResetButton = adForm.querySelector('.ad-form__reset');
 
+  var filterForm = document.querySelector('.map__filters');
+  var filterFormElements = document.querySelectorAll('select');
   var mapFilterType = document.querySelector('#housing-type');
+  var mapFilterPrice = document.querySelector('#housing-price');
+  var mapFilterRoom = document.querySelector('#housing-rooms');
+  var mapFilterGuest = document.querySelector('#housing-guests');
+  var mapFilterFeatures = document.querySelector('#housing-features');
 
   var mainPinStartCoords = window.utils.getCoords(window.mapPinMain);
+
 
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var SAVE_URL = 'https://js.dump.academy/keksobooking';
@@ -24,9 +32,12 @@
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var onLoadOffers = function (pinOffers) {
-    window.offerArr = pinOffers;
-    window.sortOfferArr = window.offerArr.slice();
-    window.makePin(window.sortOfferArr.slice(0, 5));
+    window.offersArr = pinOffers;
+    window.sortOffersArr = window.offersArr.slice();
+    window.makePin(window.sortOffersArr.slice(0, 5));
+    filterFormElements.forEach(function (elem) {
+      elem.removeAttribute('disabled', 'disabled');
+    });
   };
 
   var onSuccessSubmit = function () {
@@ -76,6 +87,10 @@
     }
   };
 
+  filterFormElements.forEach(function (elem) {
+    elem.setAttribute('disabled', 'disabled');
+  });
+
   var makePageActive = function () {
     map.classList.remove(MAP_FADED_CLASS);
     adForm.classList.remove(AD_FORM_DISABLED_CLASS);
@@ -95,6 +110,7 @@
   var makePageDisabled = function () {
     removeMapPin();
     adForm.reset();
+    filterForm.reset();
     map.classList.add(MAP_FADED_CLASS);
     adForm.classList.add(AD_FORM_DISABLED_CLASS);
     mapFiltersForm.classList.add(MAP_FILTER_DISABLED_CLASS);
@@ -158,6 +174,24 @@
     evt.preventDefault();
   });
 
+  adFormResetButton.addEventListener('click', function () {
+    var offerCard = document.querySelector('.map__card');
+    makePageDisabled();
+    if (offerCard) {
+      offerCard.remove();
+    }
+  });
+
+  adFormResetButton.addEventListener('keydown', function (evt) {
+    var offerCard = document.querySelector('.map__card');
+    if (evt.keyCode === ESC_KEYCODE) {
+      makePageDisabled();
+    }
+    if (offerCard) {
+      offerCard.remove();
+    }
+  });
+
   // Закрытие сообщения об успешной загрузке объявления на сервер
   document.addEventListener('click', function () {
     var successMessage = document.querySelector('.success');
@@ -186,17 +220,64 @@
 
   // Сортировка объявлений по типу
   mapFilterType.addEventListener('change', function () {
+    window.debounce(filterOffer)();
+  });
+  mapFilterPrice.addEventListener('change', function () {
+    window.debounce(filterOffer)();
+  });
+  mapFilterRoom.addEventListener('change', function () {
+    window.debounce(filterOffer)();
+  });
+  mapFilterGuest.addEventListener('change', function () {
+    window.debounce(filterOffer)();
+  });
+  mapFilterFeatures.addEventListener('change', function () {
+    window.debounce(filterOffer)();
+  });
+
+  var filterOffer = function () {
     var offerCard = document.querySelector('.map__card');
-    window.sortOfferArr = window.offerArr.filter(function (pinOffer) {
+    window.sortOffersArr = window.offersArr.filter(function (pinOffer) {
       if (mapFilterType.value === 'any') {
-        return pinOffer.offer;
+        return true;
       }
       return pinOffer.offer.type === mapFilterType.value;
+    }).filter(function (pinOffer) {
+      var filterPriceLimit = {
+        any: pinOffer.offer.type,
+        middle: pinOffer.offer.price >= 10000 && pinOffer.offer.price <= 50000,
+        low: pinOffer.offer.price < 10000,
+        high: pinOffer.offer.price >= 50000
+      };
+      return filterPriceLimit[mapFilterPrice.value];
+    }).filter(function (pinOffer) {
+      if (mapFilterRoom.value === 'any') {
+        return true;
+      }
+      return pinOffer.offer.rooms.toString() === mapFilterRoom.value;
+    }).filter(function (pinOffer) {
+      if (mapFilterGuest.value === 'any') {
+        return true;
+      }
+      return pinOffer.offer.guests.toString() === mapFilterGuest.value;
+    }).filter(function (pinOffer) {
+      var featuresChekedList = mapFilterFeatures.querySelectorAll('input:checked');
+      var featuresChekedListValues = [];
+      featuresChekedList.forEach(function (input) {
+        featuresChekedListValues.push(input.value);
+      });
+      if (featuresChekedListValues.length <= 0) {
+        return true;
+      }
+      var filter = pinOffer.offer.features.filter(function (feature) {
+        return featuresChekedListValues.includes(feature);
+      });
+      return filter.length >= featuresChekedListValues.length;
     });
     if (offerCard) {
       offerCard.remove();
     }
     removeMapPin();
-    window.makePin(window.sortOfferArr.slice(0, 5));
-  });
+    window.makePin(window.sortOffersArr.slice(0, 5));
+  };
 })();
