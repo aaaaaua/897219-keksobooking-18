@@ -209,7 +209,7 @@
     var offerCard = document.querySelector('.map__card');
     window.sortOfferArr = window.offerArr.filter(function (pinOffer) {
       if (mapFilterType.value === 'any') {
-        return pinOffer.offer.type;
+        return true;
       }
       return pinOffer.offer.type === mapFilterType.value;
     }).filter(function (pinOffer) {
@@ -222,12 +222,12 @@
       return filterPriceLimit[mapFilterPrice.value];
     }).filter(function (pinOffer) {
       if (mapFilterRoom.value === 'any') {
-        return pinOffer.offer.rooms;
+        return true;
       }
       return pinOffer.offer.rooms.toString() === mapFilterRoom.value;
     }).filter(function (pinOffer) {
       if (mapFilterGuest.value === 'any') {
-        return pinOffer.offer.guests;
+        return true;
       }
       return pinOffer.offer.guests.toString() === mapFilterGuest.value;
     }).filter(function (pinOffer) {
