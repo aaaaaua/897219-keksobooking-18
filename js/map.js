@@ -190,19 +190,19 @@
 
   // Сортировка объявлений по типу
   mapFilterType.addEventListener('change', function () {
-    filterOffer();
+    window.debounce(filterOffer)();
   });
   mapFilterPrice.addEventListener('change', function () {
-    filterOffer();
+    window.debounce(filterOffer)();
   });
   mapFilterRoom.addEventListener('change', function () {
-    filterOffer();
+    window.debounce(filterOffer)();
   });
   mapFilterGuest.addEventListener('change', function () {
-    filterOffer();
+    window.debounce(filterOffer)();
   });
   mapFilterFeatures.addEventListener('change', function () {
-    filterOffer();
+    window.debounce(filterOffer)();
   });
 
   var filterOffer = function () {
