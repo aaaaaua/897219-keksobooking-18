@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
-  var pinOfferList = document.querySelector('.map__pins');
-  var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var PIN_OFFER_OFFSET_X = 25;
   var PIN_OFFER_OFFSET_Y = 70;
+
+  var pinOfferList = document.querySelector('.map__pins');
+  var pinOfferTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   // создание и отрисовка меток объявлений на карте
   var createPin = function (pinOffer, pinId) {
