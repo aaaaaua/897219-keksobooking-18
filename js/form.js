@@ -2,6 +2,7 @@
 'use strict';
 // Валидация формы
 (function () {
+  var MAX_PRICE = 1000000;
   var adFormGuest = document.querySelector('#capacity');
   var adFormRooms = document.querySelector('#room_number');
   var adFormPrice = document.querySelector('#price');
@@ -12,51 +13,51 @@
   var setRoomGuestValue = function () {
     var adFormGuestOptions = adFormGuest.querySelectorAll('option');
 
-    var CAPACITY = {
+    var capacity = {
       forOneGuest: adFormGuestOptions[2],
       forTwoGuest: adFormGuestOptions[1],
       forThreeGuest: adFormGuestOptions[0],
       notForGuest: adFormGuestOptions[3]
     };
 
-    var ROOM_QUANTITY = {
+    var roomQuantity = {
       one: '1',
       two: '2',
       three: '3',
       hundred: '100'
     };
 
-    var resetAdFormGuestAttribute = function (array) {
-      for (var i = 0; i < array.length; i++) {
-        array[i].setAttribute('disabled', 'disabled');
-        array[i].removeAttribute('selected');
+    var resetAdFormGuestAttribute = function () {
+      for (var i = 0; i < adFormGuestOptions.length; i++) {
+        adFormGuestOptions[i].setAttribute('disabled', 'disabled');
+        adFormGuestOptions[i].removeAttribute('selected');
       }
     };
-    resetAdFormGuestAttribute(adFormGuestOptions);
+    resetAdFormGuestAttribute();
 
-    CAPACITY.forOneGuest.setAttribute('selected', 'selected');
-    CAPACITY.forOneGuest.removeAttribute('disabled');
+    capacity.forOneGuest.setAttribute('selected', 'selected');
+    capacity.forOneGuest.removeAttribute('disabled');
 
     adFormRooms.onchange = function () {
-      if (adFormRooms.value === ROOM_QUANTITY.one) {
-        resetAdFormGuestAttribute(adFormGuestOptions);
-        CAPACITY.forOneGuest.removeAttribute('disabled');
-        CAPACITY.forOneGuest.setAttribute('selected', 'selected');
-      } else if (adFormRooms.value === ROOM_QUANTITY.two) {
-        resetAdFormGuestAttribute(adFormGuestOptions);
-        CAPACITY.forTwoGuest.removeAttribute('disabled');
-        CAPACITY.forOneGuest.removeAttribute('disabled');
-        CAPACITY.forOneGuest.setAttribute('selected', 'selected');
-      } else if (adFormRooms.value === ROOM_QUANTITY.three) {
-        resetAdFormGuestAttribute(adFormGuestOptions);
-        CAPACITY.forTwoGuest.removeAttribute('disabled');
-        CAPACITY.forThreeGuest.removeAttribute('disabled');
-        CAPACITY.forOneGuest.removeAttribute('disabled');
-        CAPACITY.forOneGuest.setAttribute('selected', 'selected');
-      } else if (adFormRooms.value === ROOM_QUANTITY.hundred) {
-        resetAdFormGuestAttribute(adFormGuestOptions);
-        CAPACITY.notForGuest.removeAttribute('disabled');
-        CAPACITY.notForGuest.setAttribute('selected', 'selected');
+      if (adFormRooms.value === roomQuantity.one) {
+        resetAdFormGuestAttribute();
+        capacity.forOneGuest.removeAttribute('disabled');
+        capacity.forOneGuest.setAttribute('selected', 'selected');
+      } else if (adFormRooms.value === roomQuantity.two) {
+        resetAdFormGuestAttribute();
+        capacity.forTwoGuest.removeAttribute('disabled');
+        capacity.forOneGuest.removeAttribute('disabled');
+        capacity.forOneGuest.setAttribute('selected', 'selected');
+      } else if (adFormRooms.value === roomQuantity.three) {
+        resetAdFormGuestAttribute();
+        capacity.forTwoGuest.removeAttribute('disabled');
+        capacity.forThreeGuest.removeAttribute('disabled');
+        capacity.forOneGuest.removeAttribute('disabled');
+        capacity.forOneGuest.setAttribute('selected', 'selected');
+      } else if (adFormRooms.value === roomQuantity.hundred) {
+        resetAdFormGuestAttribute();
+        capacity.notForGuest.removeAttribute('disabled');
+        capacity.notForGuest.setAttribute('selected', 'selected');
       }
     };
   };
@@ -74,7 +75,7 @@
       adFormPrice.setAttribute('placeholder', minPrice[adFormType.value]);
     });
 
-    adFormPrice.setAttribute('max', '1000000');
+    adFormPrice.setAttribute('max', MAX_PRICE);
   };
 
   var setNewFormTimeInOutAttribute = function () {

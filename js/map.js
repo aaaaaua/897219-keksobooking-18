@@ -9,6 +9,9 @@
   var AD_FORM_DISABLED_CLASS = 'ad-form--disabled';
   var MAP_FILTER_DISABLED_CLASS = 'map__filters--disabled';
 
+  var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
+  var SAVE_URL = 'https://js.dump.academy/keksobooking';
+
   var map = document.querySelector('.map');
   var mapFiltersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
@@ -25,12 +28,10 @@
 
   var mainPinStartCoords = window.utils.getCoords(window.mapPinMain);
 
-
-  var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
-  var SAVE_URL = 'https://js.dump.academy/keksobooking';
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
+  // успешная загрузка объявлений с сервера
   var onLoadOffers = function (pinOffers) {
     window.offersArr = pinOffers;
     window.sortOffersArr = window.offersArr.slice();
@@ -40,11 +41,15 @@
     });
   };
 
+  // успешная отправка формы на сервер
   var onSuccessSubmit = function () {
     var successSubmit = successTemplate.cloneNode(true);
     map.appendChild(successSubmit);
+    document.addEventListener('click', onSuccessSubmitClick);
+    document.addEventListener('keydown', onSuccessSubmitEscPress);
   };
 
+  // ощибка загрузки данных с сервера
   var onLoadError = function () {
     var loadError = errorTemplate.cloneNode(true);
     map.appendChild(loadError);
@@ -62,8 +67,10 @@
         window.backend.load(LOAD_URL, onLoadOffers, onLoadError);
       }
     }, {once: true});
+    document.addEventListener('keydown', onErrorEscPress);
   };
 
+  // ошибка отправки данных формы на сервер
   var onSubmitError = function () {
     var loadError = errorTemplate.cloneNode(true);
     map.appendChild(loadError);
@@ -73,31 +80,58 @@
         errorMessage.remove();
       }
     }, {once: true});
+    document.addEventListener('keydown', onErrorEscPress);
   };
 
+  // закрытие окна сообщения об ошибке
+  var onErrorEscPress = function (evt) {
+    var errorMessage = document.querySelector('.error');
+    var pins = map.querySelectorAll('.map__pin');
+    if (evt.keyCode === ESC_KEYCODE && errorMessage && pins.length <= 1) {
+      errorMessage.remove();
+      map.classList.add(MAP_FADED_CLASS);
+      window.mapPinMain.style.cssText = 'left: ' + mainPinStartCoords.x + 'px; top: ' + mainPinStartCoords.y + 'px;';
+    } else if (evt.keyCode === ESC_KEYCODE && errorMessage) {
+      errorMessage.remove();
+    }
+    document.removeEventListener('keydown', onErrorEscPress);
+  };
+
+  // закрытие окна сообщения об спешной загрузке
+  var onSuccessSubmitClick = function () {
+    var successMessage = document.querySelector('.success');
+    if (successMessage) {
+      successMessage.remove();
+    }
+    document.removeEventListener('click', onSuccessSubmitClick);
+    document.removeEventListener('keydown', onSuccessSubmitEscPress);
+  };
+
+  var onSuccessSubmitEscPress = function (evt) {
+    var successMessage = document.querySelector('.success');
+    if (evt.keyCode === ESC_KEYCODE && successMessage) {
+      successMessage.remove();
+    }
+    document.removeEventListener('keydown', onSuccessSubmitEscPress);
+    document.removeEventListener('click', onSuccessSubmitClick);
+  };
+
+  // активация и отключение элементов формы
   var makeFormElementsActive = function () {
-    for (var i = 0; i < formFieldsets.length; i++) {
-      formFieldsets[i].removeAttribute('disabled');
-    }
+    formFieldsets.forEach(function (elem) {
+      elem.removeAttribute('disabled');
+    });
   };
-
   var makeFormElementsDisabled = function () {
-    for (var i = 0; i < formFieldsets.length; i++) {
-      formFieldsets[i].setAttribute('disabled', 'disabled');
-    }
+    formFieldsets.forEach(function (elem) {
+      elem.setAttribute('disabled', 'disabled');
+    });
   };
-
   filterFormElements.forEach(function (elem) {
     elem.setAttribute('disabled', 'disabled');
   });
 
-  var makePageActive = function () {
-    map.classList.remove(MAP_FADED_CLASS);
-    adForm.classList.remove(AD_FORM_DISABLED_CLASS);
-    mapFiltersForm.classList.remove(MAP_FILTER_DISABLED_CLASS);
-    makeFormElementsActive(adForm);
-  };
-
+  // удаление пинов на карте
   var removeMapPin = function () {
     var pins = map.querySelectorAll('.map__pin');
     pins.forEach(function (pin) {
@@ -107,6 +141,15 @@
     });
   };
 
+  // перевод страницы в активный режим
+  var makePageActive = function () {
+    map.classList.remove(MAP_FADED_CLASS);
+    adForm.classList.remove(AD_FORM_DISABLED_CLASS);
+    mapFiltersForm.classList.remove(MAP_FILTER_DISABLED_CLASS);
+    makeFormElementsActive();
+  };
+
+  // перевод страницы в неактивный режим
   var makePageDisabled = function () {
     removeMapPin();
     adForm.reset();
@@ -144,21 +187,6 @@
     }
   });
 
-  // Закрытие карточки объявления
-  map.addEventListener('click', function (evt) {
-    if (evt.target.className !== 'popup__close') {
-      return;
-    }
-    window.closeCardOffer(evt);
-  });
-
-  map.addEventListener('keydown', function (evt) {
-    var offerCard = document.querySelector('.map__card');
-    if (evt.keyCode === ESC_KEYCODE && offerCard) {
-      offerCard.remove();
-    }
-  });
-
   // Отправка своего объявления на сревер
   adForm.addEventListener('submit', function (evt) {
     var offerCard = document.querySelector('.map__card');
@@ -192,33 +220,7 @@
     }
   });
 
-  // Закрытие сообщения об успешной загрузке объявления на сервер
-  document.addEventListener('click', function () {
-    var successMessage = document.querySelector('.success');
-    if (successMessage) {
-      successMessage.remove();
-    }
-  });
-
-  document.addEventListener('keydown', function (evt) {
-    var successMessage = document.querySelector('.success');
-    if (evt.keyCode === ESC_KEYCODE && successMessage) {
-      successMessage.remove();
-    }
-  });
-
-  document.addEventListener('keydown', function (evt) {
-    var errorMessage = document.querySelector('.error');
-    var pins = map.querySelectorAll('.map__pin');
-    if (evt.keyCode === ESC_KEYCODE && errorMessage && pins.length <= 1) {
-      errorMessage.remove();
-      map.classList.add(MAP_FADED_CLASS);
-    } else if (evt.keyCode === ESC_KEYCODE && errorMessage) {
-      errorMessage.remove();
-    }
-  });
-
-  // Сортировка объявлений по типу
+  // фильтрация объявлений
   mapFilterType.addEventListener('change', function () {
     window.debounce(filterOffer)();
   });

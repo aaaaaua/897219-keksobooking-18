@@ -1,11 +1,12 @@
 'use strict';
 (function () {
-  window.mapPinMain = document.querySelector('.map__pin--main');
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 84;
   var MAPS_PIN_MAIN_OFFSET = 31;
   var MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE = 84;
   var adFormAdress = document.querySelector('#address');
+
+  window.mapPinMain = document.querySelector('.map__pin--main');
 
   var mapsWidth = document.querySelector('.map').offsetWidth;
   // Координаты главной метки в неактивном состоянии
@@ -43,8 +44,8 @@
       };
 
       var limits = {
-        left: 0,
-        right: mapsWidth - MAIN_PIN_WIDTH,
+        left: 0 - MAIN_PIN_WIDTH + MAPS_PIN_MAIN_OFFSET,
+        right: mapsWidth - MAIN_PIN_WIDTH + MAPS_PIN_MAIN_OFFSET,
         top: 130 - MAIN_PIN_HEIGHT,
         bottom: 630 - MAIN_PIN_HEIGHT
       };

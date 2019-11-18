@@ -2,6 +2,7 @@
 
 (function () {
   // КАРТОЧКА ОБЪЯВЛЕНИЙ
+  var ESC_KEYCODE = 27;
   var cardOfferTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var map = document.querySelector('.map');
   var mapFilterContainer = map.querySelector('.map__filters-container');
@@ -123,10 +124,30 @@
       map.removeChild(card);
     }
     map.insertBefore(window.renderCard(window.sortOffersArr[pin.id]), mapFilterContainer);
+    map.addEventListener('click', onCardCloseButtonClick);
+    map.addEventListener('keydown', onCardEscPress);
   };
 
   window.closeCardOffer = function (evt) {
     var offerCard = evt.target.closest('.map__card');
     offerCard.remove();
+  };
+
+  var onCardCloseButtonClick = function (evt) {
+    if (evt.target.className !== 'popup__close') {
+      return;
+    }
+    window.closeCardOffer(evt);
+    map.removeEventListener('keydown', onCardEscPress);
+    map.removeEventListener('click', onCardCloseButtonClick);
+  };
+
+  var onCardEscPress = function (evt) {
+    var offerCard = document.querySelector('.map__card');
+    if (evt.keyCode === ESC_KEYCODE && offerCard) {
+      offerCard.remove();
+    }
+    map.removeEventListener('keydown', onCardEscPress);
+    map.removeEventListener('click', onCardCloseButtonClick);
   };
 })();

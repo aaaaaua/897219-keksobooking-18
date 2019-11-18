@@ -2,7 +2,7 @@
 
 window.backend = (function () {
   return {
-    load: function (URL, onLoad, onError) {
+    load: function (url, onLoad, onError) {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
 
@@ -22,11 +22,11 @@ window.backend = (function () {
 
       xhr.timeout = 10000;
 
-      xhr.open('GET', URL);
+      xhr.open('GET', url);
       xhr.send();
     },
 
-    save: function (URL, data, onSuccess, onError) {
+    save: function (url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
 
@@ -41,7 +41,7 @@ window.backend = (function () {
         onError('Произошла ошибка соединения');
       });
 
-      xhr.open('POST', URL);
+      xhr.open('POST', url);
       xhr.send(data);
     }
   };
