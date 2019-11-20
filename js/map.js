@@ -47,6 +47,7 @@
     map.appendChild(successSubmit);
     document.addEventListener('click', onSuccessSubmitClick);
     document.addEventListener('keydown', onSuccessSubmitEscPress);
+    document.activeElement.blur();
   };
 
   // ощибка загрузки данных с сервера
@@ -97,14 +98,14 @@
     document.removeEventListener('keydown', onErrorEscPress);
   };
 
-  // закрытие окна сообщения об спешной загрузке
+  // закрытие окна сообщения об успешной загрузке
   var onSuccessSubmitClick = function () {
     var successMessage = document.querySelector('.success');
     if (successMessage) {
       successMessage.remove();
     }
-    document.removeEventListener('click', onSuccessSubmitClick);
     document.removeEventListener('keydown', onSuccessSubmitEscPress);
+    document.removeEventListener('click', onSuccessSubmitClick);
   };
 
   var onSuccessSubmitEscPress = function (evt) {
@@ -212,7 +213,7 @@
 
   adFormResetButton.addEventListener('keydown', function (evt) {
     var offerCard = document.querySelector('.map__card');
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === ENTER_KEYCODE) {
       makePageDisabled();
     }
     if (offerCard) {
