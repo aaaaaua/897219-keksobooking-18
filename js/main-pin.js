@@ -10,7 +10,7 @@
 
   var mapsWidth = document.querySelector('.map').offsetWidth;
   // Координаты главной метки в неактивном состоянии
-  var getInactiveMainPinAddress = function () {
+  window.getInactiveMainPinAddress = function () {
     var mainPinCoords = window.utils.getCoords(window.mapPinMain);
     adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET);
   };
@@ -20,7 +20,7 @@
     var mainPinCoords = window.utils.getCoords(window.mapPinMain);
     adFormAdress.value = (mainPinCoords.x + MAPS_PIN_MAIN_OFFSET) + ', ' + (mainPinCoords.y + MAPS_PIN_MAIN_OFFSET_Y_IF_ACTIVE);
   };
-  getInactiveMainPinAddress();
+  window.getInactiveMainPinAddress();
 
   window.mapPinMain.addEventListener('mousedown', function (downEvt) {
     downEvt.preventDefault();

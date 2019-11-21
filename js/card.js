@@ -7,6 +7,49 @@
   var map = document.querySelector('.map');
   var mapFilterContainer = map.querySelector('.map__filters-container');
 
+  var onCardCloseButtonClick = function (evt) {
+    if (evt.target.className !== 'popup__close') {
+      return;
+    }
+    window.closeCardOffer(evt);
+    map.removeEventListener('keydown', onCardEscPress);
+    map.removeEventListener('click', onCardCloseButtonClick);
+  };
+
+  var onCardEscPress = function (evt) {
+    var offerCard = document.querySelector('.map__card');
+    if (evt.keyCode === ESC_KEYCODE && offerCard) {
+      offerCard.remove();
+    }
+    map.removeEventListener('keydown', onCardEscPress);
+    map.removeEventListener('click', onCardCloseButtonClick);
+  };
+
+  // открытие карточки объявления
+  window.openCardOffer = function (evt) {
+    var pin = evt.target.closest('.map__pin');
+    var card = map.querySelector('.map__card');
+
+    if (!pin) {
+      return;
+    }
+    if (pin === window.mapPinMain) {
+      return;
+    }
+    if (card) {
+      map.removeChild(card);
+    }
+    map.insertBefore(window.renderCard(window.sortOffersArr[pin.id]), mapFilterContainer);
+    map.addEventListener('click', onCardCloseButtonClick);
+    map.addEventListener('keydown', onCardEscPress);
+  };
+
+  // закрытие карточки объявления
+  window.closeCardOffer = function (evt) {
+    var offerCard = evt.target.closest('.map__card');
+    offerCard.remove();
+  };
+
   window.renderCard = function (pinOffer) {
     var offerCardElement = cardOfferTemplate.cloneNode(true);
 
@@ -107,47 +150,5 @@
     }
 
     return offerCardElement;
-  };
-
-  // открытие-закрытие карточки объявления
-  window.openCardOffer = function (evt) {
-    var pin = evt.target.closest('.map__pin');
-    var card = map.querySelector('.map__card');
-
-    if (!pin) {
-      return;
-    }
-    if (pin === window.mapPinMain) {
-      return;
-    }
-    if (card) {
-      map.removeChild(card);
-    }
-    map.insertBefore(window.renderCard(window.sortOffersArr[pin.id]), mapFilterContainer);
-    map.addEventListener('click', onCardCloseButtonClick);
-    map.addEventListener('keydown', onCardEscPress);
-  };
-
-  window.closeCardOffer = function (evt) {
-    var offerCard = evt.target.closest('.map__card');
-    offerCard.remove();
-  };
-
-  var onCardCloseButtonClick = function (evt) {
-    if (evt.target.className !== 'popup__close') {
-      return;
-    }
-    window.closeCardOffer(evt);
-    map.removeEventListener('keydown', onCardEscPress);
-    map.removeEventListener('click', onCardCloseButtonClick);
-  };
-
-  var onCardEscPress = function (evt) {
-    var offerCard = document.querySelector('.map__card');
-    if (evt.keyCode === ESC_KEYCODE && offerCard) {
-      offerCard.remove();
-    }
-    map.removeEventListener('keydown', onCardEscPress);
-    map.removeEventListener('click', onCardCloseButtonClick);
   };
 })();

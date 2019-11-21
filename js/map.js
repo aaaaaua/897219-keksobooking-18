@@ -160,6 +160,7 @@
     mapFiltersForm.classList.add(MAP_FILTER_DISABLED_CLASS);
     window.mapPinMain.style.cssText = 'left: ' + mainPinStartCoords.x + 'px; top: ' + mainPinStartCoords.y + 'px;';
     makeFormElementsDisabled();
+    window.getInactiveMainPinAddress();
   };
 
   window.mapPinMain.addEventListener('mousedown', function () {
