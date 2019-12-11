@@ -31,6 +31,10 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
+  var avatarPreview = document.querySelector('.ad-form-header__preview img');
+  var defaultUserAvatar = avatarPreview.src;
+  var photoPreviewContainer = document.querySelector('.ad-form__photo');
+
   // успешная загрузка объявлений с сервера
   var onLoadOffers = function (pinOffers) {
     window.offersArr = pinOffers;
@@ -142,6 +146,15 @@
     });
   };
 
+  // удаление превью фото
+  var resetUploadFormPhoto = function () {
+    var photos = photoPreviewContainer.querySelectorAll('img');
+    avatarPreview.src = defaultUserAvatar;
+    photos.forEach(function (element) {
+      element.remove();
+    });
+  };
+
   // перевод страницы в активный режим
   var makePageActive = function () {
     map.classList.remove(MAP_FADED_CLASS);
@@ -161,6 +174,7 @@
     window.mapPinMain.style.cssText = 'left: ' + mainPinStartCoords.x + 'px; top: ' + mainPinStartCoords.y + 'px;';
     makeFormElementsDisabled();
     window.getInactiveMainPinAddress();
+    resetUploadFormPhoto();
   };
 
   window.mapPinMain.addEventListener('mousedown', function () {
